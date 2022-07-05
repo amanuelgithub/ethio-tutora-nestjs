@@ -14,7 +14,7 @@ export class TutorsController {
 
   @Get('/:id')
   findOne(@Param('id') id: string): Promise<Tutor> {
-    return this.tutorsService.findTutor(id);
+    return this.tutorsService.findSingleTutor(id);
   }
 
   @Patch('/:id/booked-status')

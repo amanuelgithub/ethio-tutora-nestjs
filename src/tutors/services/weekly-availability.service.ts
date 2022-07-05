@@ -15,11 +15,24 @@ export class weeklyAvailabilityService {
 
   async createWeeklyAvailabilities(
     id: string,
-    createAvailabilityDtos: createAvailabilityDto[],
+    createAvailabilityDtos: createAvailabilityDto[] = [],
   ): Promise<void> {
     let availabilities: WeeklyAvailability[] = [];
 
-    createAvailabilityDtos.forEach(async (createAvailabilityDto) => {
+    /**
+     *
+     * createAvailabilityDtos -> passed from request body must be wraped within an array.
+     *    -> The following is an example.
+     *
+     * [
+     *   {
+     *     "day": "Monday",
+     *     "from": "10:00 pm",
+     *     "to": "1:00 am"
+     *   }
+     * ]
+     */
+    createAvailabilityDtos.forEach((createAvailabilityDto) => {
       let { day, from, to } = createAvailabilityDto;
 
       let weeklyAvailability = new WeeklyAvailability();
@@ -54,7 +67,7 @@ export class weeklyAvailabilityService {
     id: string,
   ): Promise<WeeklyAvailability[]> {
     // check if tutor with the provided id exist
-    await this.tutorsService.findTutor(id);
+    await this.tutorsService.findSingleTutor(id);
 
     const result = await this.availabilityRepository
       .createQueryBuilder('weekly_availability')

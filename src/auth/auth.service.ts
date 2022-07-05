@@ -2,32 +2,26 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
-  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
-import { UsersRepository } from 'src/users/users.repository';
 import { UsersService } from 'src/users/users.service';
 import { SignUpDto } from './dto/signup.dto';
 import * as bcrypt from 'bcrypt';
 import { SignInDto } from './dto/signin.dto';
-import { Tutor } from 'src/tutors/entities/tutor.entity';
 import { TutorsService } from 'src/tutors/services/tutors.service';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPhonePayload } from './jwt-phone-payload.interface';
 import { JwtEmailPayload } from './jwt-email-payload.interface';
+import { UserType } from 'src/users/user-type.enum';
+import { Tutor } from 'src/tutors/entities/tutor.entity';
 
 @Injectable()
 export class AuthService {
-  private usersRepository: UsersRepository;
-
   constructor(
     private usersService: UsersService,
     private tutorsService: TutorsService,
     private jwtService: JwtService,
-  ) {
-    this.usersRepository = this.usersService.getUserRepository();
-  }
+  ) {}
 
   async signup(signUpDto: SignUpDto): Promise<void> {
     const { email, phone, password, type } = signUpDto;
@@ -54,9 +48,9 @@ export class AuthService {
     let user: User;
 
     if (email) {
-      user = await this.usersRepository.findOne({ email });
+      user = await this.usersService.findUserByEmail(email);
     } else if (phone) {
-      user = await this.usersRepository.findOne({ phone });
+      user = await this.usersService.findUserByPhone(phone);
     } else {
       throw new BadRequestException('Either Email or Phone must be provided!');
     }
@@ -78,25 +72,28 @@ export class AuthService {
     hashedPassword: string,
     type: any,
   ): Promise<void> {
-    try {
-      const user = this.usersRepository.create({
-        phone,
-        password: hashedPassword,
+    const oldUser = await this.usersService.findUserByPhone(phone);
+
+    if (!oldUser) {
+      const user = await this.usersService.signup(
         type,
-      });
+        hashedPassword,
+        null,
+        phone,
+      );
+      // register to other tables based on the UserType enum
+      if (user.type === UserType.TUTOR) {
+        const tutor = new Tutor();
+        tutor.user = user;
 
-      await this.usersRepository.save(user);
-
-      const tutor = new Tutor();
-      tutor.user = user;
-
-      await this.tutorsService.signUpTutor(tutor);
-    } catch (err) {
-      if (err.errno == 19) {
-        throw new ConflictException('Phone is already taken.');
-      } else {
-        throw new InternalServerErrorException();
+        this.tutorsService.signUpTutor(tutor);
+      } else if (user.type === UserType.CLIENT) {
+        // todo:
+      } else if (user.type === UserType.ADMIN) {
+        // todo:
       }
+    } else {
+      throw new ConflictException(`Phone: ${phone} is already taken!`);
     }
   }
 
@@ -105,25 +102,31 @@ export class AuthService {
     hashedPassword: string,
     type: any,
   ): Promise<void> {
-    try {
-      const user = this.usersRepository.create({
-        email,
-        password: hashedPassword,
+    const oldUser = await this.usersService.findUserByEmail(email);
+
+    if (!oldUser) {
+      // create new user
+      const user = await this.usersService.signup(
         type,
-      });
+        hashedPassword,
+        email,
+        null,
+      );
+      // register to other tables based on the UserType enum
+      console.log('User Type ===> ', user.type);
+      if (user.type == UserType.TUTOR) {
+        const tutor = new Tutor();
+        tutor.user = user;
 
-      await this.usersRepository.save(user);
-
-      const tutor = new Tutor();
-      tutor.user = user;
-
-      await this.tutorsService.signUpTutor(tutor);
-    } catch (err) {
-      if (err.errno) {
-        throw new ConflictException('Email is already taken.');
-      } else {
-        throw new InternalServerErrorException();
+        this.tutorsService.signUpTutor(tutor);
+      } else if (user.type === UserType.CLIENT) {
+        // todo:
+      } else if (user.type === UserType.ADMIN) {
+        // todo:
       }
+    } else {
+      // else throw conflict exception (although not working as intended.)
+      throw new ConflictException(`Email: ${email} is already taken!`);
     }
   }
 }

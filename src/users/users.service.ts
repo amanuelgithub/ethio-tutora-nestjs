@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
@@ -12,8 +11,19 @@ export class UsersService {
     private usersRepository: UsersRepository,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return this.usersRepository.createUser(createUserDto);
+  async signup(
+    type: string,
+    password: string,
+    email?: string,
+    phone?: number,
+  ): Promise<User> {
+    const user = this.usersRepository.create({
+      email,
+      phone,
+      password,
+      type,
+    } as User);
+    return this.usersRepository.save(user);
   }
 
   async findAllUsers(): Promise<User[]> {
@@ -29,6 +39,16 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(`User with id: ${id} is not found.`);
     }
+    return user;
+  }
+
+  async findUserByEmail(email: string): Promise<User | undefined> {
+    const user = await this.usersRepository.findOne({ email });
+    return user;
+  }
+
+  async findUserByPhone(phone: number): Promise<User | undefined> {
+    const user = await this.usersRepository.findOne({ phone });
     return user;
   }
 
@@ -57,9 +77,5 @@ export class UsersService {
     if (result.affected === 0) {
       throw new NotFoundException(`User with ID "${id}" not found.`);
     }
-  }
-
-  getUserRepository() {
-    return this.usersRepository;
   }
 }

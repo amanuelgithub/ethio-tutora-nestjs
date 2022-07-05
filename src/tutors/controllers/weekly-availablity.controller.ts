@@ -7,7 +7,7 @@ import { weeklyAvailabilityService } from '../services/weekly-availability.servi
 export class weeklyAvailabilityController {
   constructor(private availabilityService: weeklyAvailabilityService) {}
 
-  @Get()
+  @Get('/')
   findAllWeeklyAvailability(): Promise<WeeklyAvailability[]> {
     return this.availabilityService.findAllWeeklyAvailability();
   }
@@ -19,7 +19,7 @@ export class weeklyAvailabilityController {
     return this.availabilityService.findAllWeeklyAvailabilityByTutorID(id);
   }
 
-  @Post('/tutor/:id')
+  @Post('/tutor/:id/')
   createWeeklyAvailability(
     @Param() id: string,
     @Body() createAvailabilityDtos: createAvailabilityDto[],

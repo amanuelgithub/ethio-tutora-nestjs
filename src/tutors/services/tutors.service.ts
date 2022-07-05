@@ -8,7 +8,6 @@ import { Repository } from 'typeorm';
 import { UpdateBookedStatusDto } from '../dtos/update-booked-status.dto';
 import { Tutor } from '../entities/tutor.entity';
 import { WeeklyAvailability } from '../entities/weekly-availbility.entity';
-import { BookedStatus } from '../enum/booked-status.enum';
 
 @Injectable()
 export class TutorsService {
@@ -16,6 +15,11 @@ export class TutorsService {
     @InjectRepository(Tutor)
     private tutorsRepository: Repository<Tutor>,
   ) {}
+
+  async signUpTutor(tutor: Tutor): Promise<void> {
+    console.log(tutor);
+    await this.tutorsRepository.save(tutor);
+  }
 
   async findAllTutors(): Promise<Tutor[]> {
     try {
@@ -30,12 +34,7 @@ export class TutorsService {
     }
   }
 
-  async signUpTutor(tutor: Tutor): Promise<void> {
-    console.log(tutor);
-    await this.tutorsRepository.save(tutor);
-  }
-
-  async findTutor(id: string): Promise<Tutor> {
+  async findSingleTutor(id: string): Promise<Tutor> {
     const tutor = await this.tutorsRepository.findOne(id);
     if (!tutor) {
       throw new NotFoundException(`Cannot find tutor with ID: ${id}`);
@@ -47,7 +46,7 @@ export class TutorsService {
     id: string,
     weeklyAvailabilities: WeeklyAvailability[],
   ): Promise<Tutor> {
-    const tutor = await this.findTutor(id);
+    const tutor = await this.findSingleTutor(id);
 
     tutor.weeklyAvailabilities = weeklyAvailabilities;
 
@@ -58,7 +57,7 @@ export class TutorsService {
     id: string,
     updateBookedStatusDto: UpdateBookedStatusDto,
   ): Promise<Tutor> {
-    const tutor = await this.findTutor(id);
+    const tutor = await this.findSingleTutor(id);
 
     const { isBooked } = updateBookedStatusDto;
     tutor.isBooked = isBooked;
