@@ -2,6 +2,8 @@
 /env
 /env/development.env
 
+# Ignore the default SQLite database.
+ethio_tutora_db
 
 # compiled output
 /dist
