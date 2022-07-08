@@ -1,6 +1,6 @@
-import { Admin } from 'src/admin/entities/admin.entity';
-import { Client } from 'src/clients/entities/client.entity';
-import { Tutor } from 'src/tutors/entities/tutor.entity';
+import { Admin } from '../../admin/entities/admin.entity';
+import { Client } from '../../clients/entities/client.entity';
+import { Tutor } from '../../tutors/entities/tutor.entity';
 import {
   Column,
   CreateDateColumn,
@@ -41,14 +41,14 @@ export class User {
   type?: UserType;
 
   // specify inverse side as a second parameter
-  @OneToOne(() => Client, (client) => client.user, { onDelete: 'CASCADE' })
+  @OneToOne(() => Client, { onDelete: 'CASCADE' })
   client?: Client;
 
   // specify inverse side as a second parameter
-  @OneToOne(() => Tutor, (tutor) => tutor.user, { onDelete: 'CASCADE' })
+  @OneToOne(() => Tutor, { onDelete: 'CASCADE' })
   tutor?: Tutor;
 
-  @OneToOne(() => Admin, (admin) => admin.user, { onDelete: 'CASCADE' })
+  @OneToOne(() => Admin, { onDelete: 'CASCADE' })
   admin?: Admin;
 
   @CreateDateColumn()

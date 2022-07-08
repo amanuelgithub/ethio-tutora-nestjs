@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEnum,
   IsNotEmpty,
@@ -12,16 +13,19 @@ import {
 import { UserType } from 'src/users/user-type.enum';
 
 export class SignUpDto {
+  @ApiPropertyOptional()
   @IsOptional()
   @IsEmail()
   email: string;
 
+  @ApiPropertyOptional()
   @IsOptional()
   @IsPhoneNumber()
   @MinLength(10)
   @MaxLength(20)
   phone: number;
 
+  @ApiProperty()
   @IsNotEmpty()
   @IsString()
   @MinLength(6)
@@ -31,6 +35,7 @@ export class SignUpDto {
   })
   password: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   @IsEnum(UserType)
   type: UserType;

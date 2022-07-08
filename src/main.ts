@@ -1,6 +1,10 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import {
+  DocumentBuilder,
+  SwaggerCustomOptions,
+  SwaggerModule,
+} from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -10,12 +14,20 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Ethio-Tutora')
-    .setDescription('some description...')
+    .setDescription('A tutoring platform for Ethiopians.')
     .setVersion('1.0')
-    .addTag('cats')
+    .addTag('#Ethio-Tutora')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+
+  const customOptions: SwaggerCustomOptions = {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+    customSiteTitle: 'Ethio-Tutora API doc',
+  };
+
+  SwaggerModule.setup('api', app, document, customOptions);
 
   await app.listen(3000);
 }
