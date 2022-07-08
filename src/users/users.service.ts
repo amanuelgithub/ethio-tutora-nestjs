@@ -71,6 +71,14 @@ export class UsersService {
     return await this.usersRepository.save(user);
   }
 
+  async updateOne(id: string, user: User): Promise<User> {
+    const { profileImage } = user;
+    const foundUser = await this.findUserById(id);
+    foundUser.profileImage = profileImage;
+
+    return this.usersRepository.save(foundUser);
+  }
+
   async deleteUser(id: string): Promise<void> {
     const result = await this.usersRepository.delete(id);
 

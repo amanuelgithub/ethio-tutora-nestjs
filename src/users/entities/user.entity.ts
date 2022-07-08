@@ -40,6 +40,9 @@ export class User {
   @Column()
   type?: UserType;
 
+  @Column({ nullable: true })
+  profileImage: string;
+
   // specify inverse side as a second parameter
   @OneToOne(() => Client, { onDelete: 'CASCADE' })
   client?: Client;
