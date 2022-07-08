@@ -1,7 +1,11 @@
+import { Admin } from 'src/admin/entities/admin.entity';
+import { Client } from 'src/clients/entities/client.entity';
+import { Tutor } from 'src/tutors/entities/tutor.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -13,28 +17,39 @@ export class User {
   id: string;
 
   @Column({ nullable: true })
-  firstName: string;
+  firstName?: string;
 
   @Column({ nullable: true })
-  lastName: string;
+  lastName?: string;
 
   @Column({ nullable: true })
-  age: number;
+  age?: number;
 
   @Column({ nullable: true, unique: true })
-  email: string;
+  email?: string;
 
   @Column({ nullable: true, unique: true })
-  phone: number;
+  phone?: number;
 
   @Column({ nullable: true, unique: true })
-  username: string;
+  username?: string;
 
   @Column()
-  password: string;
+  password?: string;
 
   @Column()
-  type: UserType;
+  type?: UserType;
+
+  // specify inverse side as a second parameter
+  @OneToOne(() => Client, (client) => client.user, { onDelete: 'CASCADE' })
+  client?: Client;
+
+  // specify inverse side as a second parameter
+  @OneToOne(() => Tutor, (tutor) => tutor.user, { onDelete: 'CASCADE' })
+  tutor?: Tutor;
+
+  @OneToOne(() => Admin, (admin) => admin.user, { onDelete: 'CASCADE' })
+  admin?: Admin;
 
   @CreateDateColumn()
   createdAt: Date;

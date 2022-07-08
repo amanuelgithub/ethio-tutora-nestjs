@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
 import { UpdateBookedStatusDto } from '../dtos/update-booked-status.dto';
 import { Tutor } from '../entities/tutor.entity';
 import { TutorsService } from '../services/tutors.service';
@@ -9,12 +9,12 @@ export class TutorsController {
 
   @Get()
   findAll(): Promise<Tutor[]> {
-    return this.tutorsService.findAllTutors();
+    return this.tutorsService.findAll();
   }
 
   @Get('/:id')
   findOne(@Param('id') id: string): Promise<Tutor> {
-    return this.tutorsService.findSingleTutor(id);
+    return this.tutorsService.findOne(id);
   }
 
   @Patch('/:id/booked-status')
@@ -23,5 +23,10 @@ export class TutorsController {
     @Body() updateBookedStatusDto: UpdateBookedStatusDto,
   ): Promise<Tutor> {
     return this.tutorsService.updateBookedStatus(id, updateBookedStatusDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string): Promise<void> {
+    return this.tutorsService.remove(id);
   }
 }

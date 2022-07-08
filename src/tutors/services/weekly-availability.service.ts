@@ -67,7 +67,7 @@ export class weeklyAvailabilityService {
     id: string,
   ): Promise<WeeklyAvailability[]> {
     // check if tutor with the provided id exist
-    await this.tutorsService.findSingleTutor(id);
+    await this.tutorsService.findOne(id);
 
     const result = await this.availabilityRepository
       .createQueryBuilder('weekly_availability')

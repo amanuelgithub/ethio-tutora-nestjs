@@ -1,3 +1,4 @@
+import { Booking } from 'src/bookings/entities/booking.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -7,8 +8,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { BookedStatus } from '../enum/booked-status.enum';
-import { SkillType } from '../enum/skills.enum';
+import { TutorBookedStatus } from '../enum/tutor-booked-status.enum';
 import { WeeklyAvailability } from './weekly-availbility.entity';
 
 @Entity()
@@ -16,11 +16,8 @@ export class Tutor {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  //   @Column({ nullable: true })
-  //   tutoringSkills: SkillType[];
-
-  @Column({ default: BookedStatus.OPEN })
-  isBooked: BookedStatus;
+  @Column({ default: TutorBookedStatus.OPEN })
+  isBooked: TutorBookedStatus;
 
   @Column({ nullable: true })
   paymentRatePerHour: number;
@@ -28,7 +25,7 @@ export class Tutor {
   @Column({ nullable: true })
   higherEducationLevel: string;
 
-  @OneToOne((type) => User)
+  @OneToOne((type) => User, { eager: true, onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
 
@@ -36,4 +33,7 @@ export class Tutor {
     eager: true,
   })
   weeklyAvailabilities: WeeklyAvailability[];
+
+  @OneToMany(() => Booking, (booking) => booking.tutor, { eager: true })
+  bookings: Booking[];
 }

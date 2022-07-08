@@ -14,12 +14,15 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtEmailPayload } from './jwt-email-payload.interface';
 import { UserType } from 'src/users/user-type.enum';
 import { Tutor } from 'src/tutors/entities/tutor.entity';
+import { Client } from 'src/clients/entities/client.entity';
+import { ClientsService } from 'src/clients/clients.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private tutorsService: TutorsService,
+    private clientsService: ClientsService,
     private jwtService: JwtService,
   ) {}
 
@@ -86,7 +89,7 @@ export class AuthService {
         const tutor = new Tutor();
         tutor.user = user;
 
-        this.tutorsService.signUpTutor(tutor);
+        this.tutorsService.signup(tutor);
       } else if (user.type === UserType.CLIENT) {
         // todo:
       } else if (user.type === UserType.ADMIN) {
@@ -118,9 +121,12 @@ export class AuthService {
         const tutor = new Tutor();
         tutor.user = user;
 
-        this.tutorsService.signUpTutor(tutor);
+        this.tutorsService.signup(tutor);
       } else if (user.type === UserType.CLIENT) {
-        // todo:
+        const client = new Client();
+        client.user = user;
+
+        this.clientsService.signUpClient(client);
       } else if (user.type === UserType.ADMIN) {
         // todo:
       }

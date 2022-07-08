@@ -6,9 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { WeeklyAvailability } from './entities/weekly-availbility.entity';
 import { weeklyAvailabilityController } from './controllers/weekly-availablity.controller';
 import { weeklyAvailabilityService } from './services/weekly-availability.service';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Tutor, WeeklyAvailability])],
+  imports: [TypeOrmModule.forFeature([Tutor, WeeklyAvailability]), UsersModule],
   providers: [TutorsService, weeklyAvailabilityService],
   controllers: [TutorsController, weeklyAvailabilityController],
   exports: [TutorsService],

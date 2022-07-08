@@ -5,6 +5,7 @@ import { UsersModule } from 'src/users/users.module';
 import { TutorsModule } from 'src/tutors/tutors.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { ClientsModule } from 'src/clients/clients.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     UsersModule,
     TutorsModule,
+    ClientsModule,
   ],
   providers: [AuthService],
   controllers: [AuthController],
