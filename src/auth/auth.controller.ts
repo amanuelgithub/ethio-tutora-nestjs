@@ -1,7 +1,15 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SignInDto } from './dto/signin.dto';
 import { SignUpDto } from './dto/signup.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { LocalAuthGuard } from './local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -12,8 +20,18 @@ export class AuthController {
     return this.authService.signup(signupDto);
   }
 
+  @UseGuards(LocalAuthGuard)
   @Post('/signin')
-  signin(@Body() signinDto: SignInDto): Promise<{ accessToken: string }> {
-    return this.authService.signin(signinDto);
+  async login(@Request() req) {
+    return this.authService.login(req.user);
+  }
+
+  /** This is just a test endpoint to check if JwtAuthGuard
+   *  is working.
+   */
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req.user;
   }
 }

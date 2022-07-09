@@ -6,12 +6,15 @@ import { TutorsModule } from 'src/tutors/tutors.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ClientsModule } from 'src/clients/clients.module';
+import { jwtConstants } from './constants';
+import { LocalStrategy } from './local.strategy';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    PassportModule,
     JwtModule.register({
-      secret: 'topSecret51',
+      secret: jwtConstants.secret,
       signOptions: {
         expiresIn: 3600,
       },
@@ -20,7 +23,7 @@ import { ClientsModule } from 'src/clients/clients.module';
     TutorsModule,
     ClientsModule,
   ],
-  providers: [AuthService],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}
