@@ -18,13 +18,6 @@ export class SignUpDto {
   @IsEmail()
   email: string;
 
-  // @ApiPropertyOptional()
-  // @IsOptional()
-  // @IsPhoneNumber()
-  // @MinLength(10)
-  // @MaxLength(20)
-  // phone: number;
-
   @ApiProperty()
   @IsNotEmpty()
   @IsString()

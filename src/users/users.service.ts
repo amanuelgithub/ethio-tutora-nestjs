@@ -11,18 +11,13 @@ export class UsersService {
     private usersRepository: UsersRepository,
   ) {}
 
-  async signup(
-    type: string,
-    password: string,
-    email?: string,
-    phone?: number,
-  ): Promise<User> {
+  async signup(type: string, password: string, email: string): Promise<User> {
     const user = this.usersRepository.create({
       email,
-      phone,
       password,
       type,
     } as User);
+
     return this.usersRepository.save(user);
   }
 
