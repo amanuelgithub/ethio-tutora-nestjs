@@ -23,7 +23,7 @@ export class ClientsService {
   }
 
   async findOne(id: string): Promise<Client> {
-    const client = await this.clientsRepository.findOne({ id });
+    const client = await this.clientsRepository.findOne({ where: { id } });
     if (!client) {
       throw new NotFoundException(`Client with id: ${id} is not found.`);
     }
@@ -43,11 +43,15 @@ export class ClientsService {
     await this.usersService.deleteUser(client.user.id);
   }
 
+  /**
+   * called from the `bookings.service.ts`
+   * updates clients booking-lists
+   */
   async updateBookingList(id: string, booking: Booking) {
     const client = await this.findOne(id);
 
-    let bookings = [];
-    for (let booking in client.bookings) {
+    const bookings = [];
+    for (const booking in client.bookings) {
       bookings.push(client.bookings[booking]);
     }
     // finally add the booking sent through the parameter

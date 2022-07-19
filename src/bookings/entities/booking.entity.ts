@@ -1,16 +1,6 @@
 import { Client } from 'src/clients/entities/client.entity';
-import { Subject } from 'src/subjects/entities/subject.entity';
 import { Tutor } from 'src/tutors/entities/tutor.entity';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { BookingStatus } from '../enum/booking-status.enum';
 
 @Entity()

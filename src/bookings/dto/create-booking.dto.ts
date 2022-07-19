@@ -1,10 +1,4 @@
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Tutor } from '../../tutors/entities/tutor.entity';
 import { Client } from '../../clients/entities/client.entity';
 import { BookingStatus } from '../enum/booking-status.enum';

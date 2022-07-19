@@ -7,9 +7,7 @@ import { Subject } from './entities/subject.entity';
 
 @Injectable()
 export class SubjectsService {
-  constructor(
-    @InjectRepository(Subject) private subjectsRepository: Repository<Subject>,
-  ) {}
+  constructor(@InjectRepository(Subject) private subjectsRepository: Repository<Subject>) {}
 
   async create(createSubjectDto: CreateSubjectDto): Promise<Subject> {
     const user = this.subjectsRepository.create(createSubjectDto);
@@ -26,17 +24,14 @@ export class SubjectsService {
   }
 
   async findOne(id: string): Promise<Subject> {
-    const subject = await this.subjectsRepository.findOne({ id });
+    const subject = await this.subjectsRepository.findOne({ where: { id } });
     if (!subject) {
       throw new NotFoundException(`Subject: ${subject.name} is not found!`);
     }
     return subject;
   }
 
-  async update(
-    id: string,
-    updateSubjectDto: UpdateSubjectDto,
-  ): Promise<Subject> {
+  async update(id: string, updateSubjectDto: UpdateSubjectDto): Promise<Subject> {
     const subject = await this.findOne(id);
 
     const { name, description } = updateSubjectDto;

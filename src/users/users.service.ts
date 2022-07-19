@@ -1,16 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(UsersRepository)
-    private usersRepository: UsersRepository,
-  ) {}
-
+  constructor(private usersRepository: UsersRepository) {}
   async signup(type: string, password: string, email: string): Promise<User> {
     const user = this.usersRepository.create({
       email,
@@ -30,7 +25,7 @@ export class UsersService {
   }
 
   async findUserById(id: string): Promise<User> {
-    const user = await this.usersRepository.findOne({ id });
+    const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException(`User with id: ${id} is not found.`);
     }
@@ -38,12 +33,12 @@ export class UsersService {
   }
 
   async findUserByEmail(email: string): Promise<User | undefined> {
-    const user = await this.usersRepository.findOne({ email });
+    const user = await this.usersRepository.findOne({ where: { email } });
     return user;
   }
 
   async findUserByPhone(phone: number): Promise<User | undefined> {
-    const user = await this.usersRepository.findOne({ phone });
+    const user = await this.usersRepository.findOne({ where: { phone } });
     return user;
   }
 
@@ -51,8 +46,7 @@ export class UsersService {
     const user = await this.findUserById(id);
     console.log('User Before: ', user);
 
-    const { firstName, lastName, age, email, username, password } =
-      updateUserDto;
+    const { firstName, lastName, age, email, username, password } = updateUserDto;
 
     user.firstName = firstName;
     user.lastName = lastName;

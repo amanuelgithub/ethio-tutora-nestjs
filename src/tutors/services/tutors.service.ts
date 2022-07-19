@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Booking } from 'src/bookings/entities/booking.entity';
 import { UsersService } from 'src/users/users.service';
@@ -37,17 +33,14 @@ export class TutorsService {
   }
 
   async findOne(id: string): Promise<Tutor> {
-    const tutor = await this.tutorsRepository.findOne(id);
+    const tutor = await this.tutorsRepository.findOne({ where: { id } });
     if (!tutor) {
       throw new NotFoundException(`Cannot find tutor with ID: ${id}`);
     }
     return tutor;
   }
 
-  async createWeeklyAvailabilities(
-    id: string,
-    weeklyAvailabilities: WeeklyAvailability[],
-  ): Promise<Tutor> {
+  async createWeeklyAvailabilities(id: string, weeklyAvailabilities: WeeklyAvailability[]): Promise<Tutor> {
     const tutor = await this.findOne(id);
 
     tutor.weeklyAvailabilities = weeklyAvailabilities;
@@ -55,10 +48,10 @@ export class TutorsService {
     return await this.tutorsRepository.save(tutor);
   }
 
-  async updateBookedStatus(
-    id: string,
-    updateBookedStatusDto: UpdateBookedStatusDto,
-  ): Promise<Tutor> {
+  /**
+   * update booked status(i.e set his own availability)
+   */
+  async updateBookedStatus(id: string, updateBookedStatusDto: UpdateBookedStatusDto): Promise<Tutor> {
     const tutor = await this.findOne(id);
 
     const { isBooked } = updateBookedStatusDto;
@@ -81,12 +74,15 @@ export class TutorsService {
     await this.usersService.deleteUser(tutor.user.id);
   }
 
-  // update's booking list
+  /**
+   * called from the `bookings.service.ts`
+   * updates tutor's booking-lists
+   */
   async updateBookingList(id: string, booking: Booking) {
     const tutor = await this.findOne(id);
 
-    let bookings = [];
-    for (let booking in tutor.bookings) {
+    const bookings = [];
+    for (const booking in tutor.bookings) {
       bookings.push(tutor.bookings[booking]);
     }
     // finally add booking sent through the parameter

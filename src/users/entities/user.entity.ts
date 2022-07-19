@@ -1,14 +1,7 @@
 import { Admin } from '../../admin/entities/admin.entity';
 import { Client } from '../../clients/entities/client.entity';
 import { Tutor } from '../../tutors/entities/tutor.entity';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { UserType } from '../user-type.enum';
 
 @Entity()

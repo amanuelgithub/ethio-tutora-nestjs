@@ -1,14 +1,21 @@
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import {
-  DocumentBuilder,
-  SwaggerCustomOptions,
-  SwaggerModule,
-} from '@nestjs/swagger';
+import { DocumentBuilder, SwaggerCustomOptions, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { Constants } from './commons/constants';
+import { IAppConfig } from './config/app.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // get app config
+  const configService = app.get(ConfigService);
+  const appConfig = configService.get<IAppConfig>(Constants.APP_CONFIG);
+
+  // setup api global prefix
+  const globalPrefix = appConfig.APP_PREFIX;
+  app.setGlobalPrefix(globalPrefix);
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 

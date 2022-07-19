@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { SignUpDto } from './dto/signup.dto';
 import * as bcrypt from 'bcrypt';
@@ -37,21 +33,12 @@ export class AuthService {
     }
   }
 
-  private async signupWithEmail(
-    email: string,
-    hashedPassword: string,
-    type: any,
-  ): Promise<void> {
+  private async signupWithEmail(email: string, hashedPassword: string, type: any): Promise<void> {
     const oldUser = await this.usersService.findUserByEmail(email);
 
     if (!oldUser) {
       // create new user
-      const user = await this.usersService.signup(
-        type,
-        hashedPassword,
-        email,
-        null,
-      );
+      const user = await this.usersService.signup(type, hashedPassword, email);
       // register to other tables based on the UserType enum
       console.log('User Type ===> ', user.type);
       if (user.type == UserType.TUTOR) {

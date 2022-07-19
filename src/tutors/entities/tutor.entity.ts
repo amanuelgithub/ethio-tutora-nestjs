@@ -1,13 +1,6 @@
 import { Booking } from 'src/bookings/entities/booking.entity';
 import { User } from 'src/users/entities/user.entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { TutorBookedStatus } from '../enum/tutor-booked-status.enum';
 import { WeeklyAvailability } from './weekly-availbility.entity';
 
