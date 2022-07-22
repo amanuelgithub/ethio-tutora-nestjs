@@ -5,10 +5,7 @@ import { Admin } from './entities/admin.entity';
 
 @Injectable()
 export class AdminService {
-  constructor(
-    @InjectRepository(Admin)
-    private adminRepository: Repository<Admin>,
-  ) {}
+  constructor(@InjectRepository(Admin) private adminRepository: Repository<Admin>) {}
 
   async remove(id: string): Promise<void> {
     const result = await this.adminRepository.delete(id);

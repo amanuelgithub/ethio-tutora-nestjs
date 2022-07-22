@@ -8,6 +8,7 @@ import { UserType } from 'src/users/user-type.enum';
 import { Tutor } from 'src/tutors/entities/tutor.entity';
 import { Client } from 'src/clients/entities/client.entity';
 import { ClientsService } from 'src/clients/clients.service';
+import { Admin } from 'src/admin/entities/admin.entity';
 
 @Injectable()
 export class AuthService {
@@ -52,7 +53,8 @@ export class AuthService {
 
         this.clientsService.signUpClient(client);
       } else if (user.type === UserType.ADMIN) {
-        // todo:
+        const admin = new Admin();
+        admin.user = user;
       }
     } else {
       // else throw conflict exception (although not working as intended.)

@@ -6,6 +6,6 @@ export class Admin {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne((_type) => User, { eager: true, onDelete: 'CASCADE' })
+  @OneToOne(() => User, { eager: true, onDelete: 'CASCADE' })
   user: User;
 }
