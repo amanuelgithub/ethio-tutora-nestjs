@@ -14,14 +14,18 @@ import * as dotenv from 'dotenv';
 dotenv.config({ path: `${process.cwd()}/src/env/${process.env.NODE_ENV}.env` });
 
 const postgresqlDataSourceOption: DataSourceOptions = {
+  url: process.env.DATABASE_URL,
   type: 'postgres',
-  host: process.env.DATABASE_HOST || 'localhost',
-  port: process.env.DATABASE_PORT || 5432,
-  database: process.env.DATABASE_NAME || 'ethio_tutora',
-  username: process.env.DATABASE_USER || 'postgres',
-  password: process.env.DATABASE_PASSWORD || 'password',
+  // host: process.env.DATABASE_HOST || 'localhost',
+  // port: process.env.DATABASE_PORT || 5432,
+  // database: process.env.DATABASE_NAME || 'ethio_tutora',
+  // username: process.env.DATABASE_USER || 'postgres',
+  // password: process.env.DATABASE_PASSWORD || 'password',
+  ssl: {
+    rejectUnauthorized: false,
+  },
   entities: [User, Tutor, Client, WeeklyAvailability, Subject, Booking, Admin],
-  synchronize: true,
+  synchronize: false,
 } as DataSourceOptions;
 
 // previously used sqlite database configuration
