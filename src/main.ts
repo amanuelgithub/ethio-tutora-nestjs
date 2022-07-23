@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerCustomOptions, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { Constants } from './commons/constants';
+import { APP_CONFIG } from './commons/constants';
 import { IAppConfig } from './config/app.config';
 
 async function bootstrap() {
@@ -11,7 +11,7 @@ async function bootstrap() {
 
   // get app config
   const configService = app.get(ConfigService);
-  const appConfig = configService.get<IAppConfig>(Constants.APP_CONFIG);
+  const appConfig = configService.get<IAppConfig>(APP_CONFIG);
 
   // setup api global prefix
   const globalPrefix = appConfig.APP_PREFIX;

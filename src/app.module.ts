@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { Constants } from './commons/constants';
+import { DB_CONFIG } from './commons/constants';
 import { DatabaseConfig } from './config/database.config';
 import { appConfig } from './config/app.config';
 import { validationSchema } from './config/env.validation';
@@ -29,7 +29,7 @@ console.log(`${process.cwd()}/src/env/${process.env.NODE_ENV}.env`);
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        ...configService.get(Constants.DB_CONFIG),
+        ...configService.get(DB_CONFIG),
       }),
     }),
 
