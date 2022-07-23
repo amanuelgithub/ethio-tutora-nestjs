@@ -24,8 +24,10 @@ const postgresqlDataSourceOption: DataSourceOptions = {
   ssl: {
     rejectUnauthorized: false,
   },
-  entities: [User, Tutor, Client, WeeklyAvailability, Subject, Booking, Admin],
-  synchronize: false,
+  // entities: [User, Tutor, Client, WeeklyAvailability, Subject, Booking, Admin],
+  entities: ['dist/**/*.entity{.ts,.js}'],
+  autoLoadEntities: true,
+  synchronize: true,
 } as DataSourceOptions;
 
 // previously used sqlite database configuration
