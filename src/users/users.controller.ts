@@ -22,6 +22,9 @@ import { v4 as uuidv4 } from 'uuid';
 import path = require('path');
 import { join } from 'path';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { PoliciesGuard } from 'src/casl/policies.guard';
+import { CheckPolicies } from 'src/casl/check-policy.decorator';
+import { Action, AppAbility } from 'src/casl/casl-ability.factory';
 
 /**
  * used to store the uploaded profileImages to the
@@ -40,26 +43,35 @@ export const storage = {
   }),
 };
 
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, User))
   findAll(): Promise<User[]> {
     return this.usersService.findAllUsers();
   }
 
   @Get('/:id')
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, User))
   findOne(@Param('id') id: string): Promise<User> {
     return this.usersService.findUserById(id);
   }
 
   @Patch('/:id')
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, User))
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
     return this.usersService.updateUser(id, updateUserDto);
   }
 
   @Delete('/:id')
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Delete, User))
   remove(@Param('id') id: string): Promise<void> {
     return this.usersService.deleteUser(id);
   }
@@ -70,8 +82,9 @@ export class UsersController {
    * @param req to upload profileImage to User entity
    * @returns updated User entity data
    */
-  @UseGuards(JwtAuthGuard)
   @Post('upload')
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, User))
   @UseInterceptors(FileInterceptor('file', storage))
   uploadFile(@UploadedFile() file, @Request() req) {
     const user: User = req.user;
@@ -82,6 +95,8 @@ export class UsersController {
   }
 
   @Get('profile-image/:imagename')
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, User))
   findProfileImage(@Param('imagename') imagename, @Response() res): Promise<unknown> {
     return res.sendFile(join(process.cwd(), 'uploads/profileimages/' + imagename));
   }

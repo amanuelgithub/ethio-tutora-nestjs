@@ -1,4 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Action, AppAbility } from 'src/casl/casl-ability.factory';
+import { CheckPolicies } from 'src/casl/check-policy.decorator';
+import { PoliciesGuard } from 'src/casl/policies.guard';
 import { UpdateBookedStatusDto } from '../dtos/update-booked-status.dto';
 import { Tutor } from '../entities/tutor.entity';
 import { TutorsService } from '../services/tutors.service';
@@ -18,14 +22,15 @@ export class TutorsController {
   }
 
   @Patch('/:id/booked-status')
-  updateBookedStatus(
-    @Param('id') id: string,
-    @Body() updateBookedStatusDto: UpdateBookedStatusDto,
-  ): Promise<Tutor> {
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, Tutor))
+  updateBookedStatus(@Param('id') id: string, @Body() updateBookedStatusDto: UpdateBookedStatusDto): Promise<Tutor> {
     return this.tutorsService.updateBookedStatus(id, updateBookedStatusDto);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Delete, Tutor))
   remove(@Param('id') id: string): Promise<void> {
     return this.tutorsService.remove(id);
   }

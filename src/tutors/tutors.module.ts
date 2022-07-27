@@ -7,9 +7,10 @@ import { WeeklyAvailability } from './entities/weekly-availbility.entity';
 import { weeklyAvailabilityController } from './controllers/weekly-availablity.controller';
 import { weeklyAvailabilityService } from './services/weekly-availability.service';
 import { UsersModule } from '../users/users.module';
+import { CaslModule } from 'src/casl/casl.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Tutor, WeeklyAvailability]), UsersModule],
+  imports: [TypeOrmModule.forFeature([Tutor, WeeklyAvailability]), UsersModule, CaslModule],
   providers: [TutorsService, weeklyAvailabilityService],
   controllers: [TutorsController, weeklyAvailabilityController],
   exports: [TutorsService],

@@ -1,16 +1,11 @@
-import {
-  Ability,
-  AbilityBuilder,
-  AbilityClass,
-  ExtractSubjectType,
-  InferSubjects,
-} from '@casl/ability';
+import { Ability, AbilityBuilder, AbilityClass, ExtractSubjectType, InferSubjects } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
-import { Booking } from 'src/bookings/entities/booking.entity';
-import { Client } from 'src/clients/entities/client.entity';
-import { Subject } from 'src/subjects/entities/subject.entity';
-import { Tutor } from 'src/tutors/entities/tutor.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Booking } from '../bookings/entities/booking.entity';
+import { Client } from '../clients/entities/client.entity';
+import { Subject } from '../subjects/entities/subject.entity';
+import { Tutor } from '../tutors/entities/tutor.entity';
+import { WeeklyAvailability } from '../tutors/entities/weekly-availbility.entity';
+import { User } from '../users/entities/user.entity';
 
 export enum Action {
   Manage = 'manage',
@@ -21,13 +16,8 @@ export enum Action {
 }
 
 type Subjects =
-  | InferSubjects<
-      | typeof User
-      | typeof Client
-      | typeof Tutor
-      | typeof Subject
-      | typeof Booking
-    >
+  | InferSubjects<typeof User | typeof Client | typeof Tutor | typeof Subject | typeof Booking>
+  | typeof WeeklyAvailability
   | 'all';
 
 export type AppAbility = Ability<[Action, Subjects]>;
@@ -35,27 +25,24 @@ export type AppAbility = Ability<[Action, Subjects]>;
 @Injectable()
 export class CaslAbilityFactory {
   createForUser(user: User) {
-    const { can, cannot, build } = new AbilityBuilder<
-      Ability<[Action, Subjects]>
-    >(Ability as AbilityClass<AppAbility>);
-
-    console.log('user type:', user.type);
+    const { can, cannot, build } = new AbilityBuilder<Ability<[Action, Subjects]>>(Ability as AbilityClass<AppAbility>);
 
     if (user.type === 'ADMIN') {
       // gives fullright over-all subjects
       can(Action.Manage, 'all');
     } else if (user.type === 'CLIENT') {
       can(Action.Manage, Booking);
+      can(Action.Read, WeeklyAvailability);
+      can(Action.Read, Subject);
     } else if (user.type === 'TUTOR') {
+      can(Action.Manage, WeeklyAvailability);
       can(Action.Read, Booking);
       can(Action.Update, Booking);
-
-      cannot(Action.Create, Subject).because('You are not an admin!!');
+      can(Action.Read, Subject);
     }
 
     return build({
-      detectSubjectType: (item) =>
-        item.constructor as ExtractSubjectType<Subjects>,
+      detectSubjectType: (item) => item.constructor as ExtractSubjectType<Subjects>,
     });
   }
 }
