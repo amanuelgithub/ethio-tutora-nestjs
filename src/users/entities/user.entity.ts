@@ -4,8 +4,20 @@ import { Tutor } from '../../tutors/entities/tutor.entity';
 import { Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { UserType } from '../user-type.enum';
 
+export interface IUser {
+  id: string;
+  firstName?: string;
+  lastName?: string;
+  age?: number;
+  email?: string;
+  phone?: number;
+  username?: string;
+  password?: string;
+  type?: UserType;
+}
+
 @Entity()
-export class User {
+export class User implements IUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

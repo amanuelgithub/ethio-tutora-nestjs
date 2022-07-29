@@ -9,6 +9,8 @@ import { IAppConfig } from './config/app.config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
+
   // get app config
   const configService = app.get(ConfigService);
   const appConfig = configService.get<IAppConfig>(APP_CONFIG);
