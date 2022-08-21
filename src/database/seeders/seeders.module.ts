@@ -15,6 +15,7 @@ import { TutorsModule } from 'src/tutors/tutors.module';
 import { UsersModule } from 'src/users/users.module';
 import { Seeder } from './seeder';
 import { UsersSeederModule } from './users-seeder/users-seeder.module';
+import { SubjectsSeederModule } from './subjects-seeder/subjects-seeder.module';
 
 @Module({
   imports: [
@@ -49,6 +50,8 @@ import { UsersSeederModule } from './users-seeder/users-seeder.module';
     CaslModule,
 
     UsersSeederModule,
+
+    SubjectsSeederModule,
   ],
   providers: [Logger, Seeder],
 })

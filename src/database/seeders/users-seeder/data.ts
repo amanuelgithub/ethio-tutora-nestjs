@@ -18,7 +18,7 @@ async function genSaltedPassword(password: string): Promise<string> {
 export const users: IUser[] = [];
 
 function populate() {
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 1000; i++) {
     const randUser = {
       id: uuidv4(),
       firstName: faker.name.findName(),
