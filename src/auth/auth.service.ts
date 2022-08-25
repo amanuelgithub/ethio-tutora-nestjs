@@ -64,7 +64,13 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { email: user.email, sub: user.id };
-    return { access_token: this.jwtService.sign(payload) };
+    return {
+      access_token: this.jwtService.sign(payload),
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      type: user.type,
+    };
   }
 
   // used by the local.strategy.ts
