@@ -9,6 +9,9 @@ export class Tutor {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ nullable: true })
+  bio: string;
+
   @Column({ default: TutorBookedStatus.OPEN })
   isBooked: TutorBookedStatus;
 

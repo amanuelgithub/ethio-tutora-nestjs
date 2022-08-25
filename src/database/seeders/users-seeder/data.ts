@@ -6,7 +6,7 @@ import { faker } from '@faker-js/faker';
 import { UserType } from 'src/users/user-type.enum';
 import * as bcrypt from 'bcrypt';
 
-const userTypesArray = [UserType.ADMIN, UserType.CLIENT, UserType.TUTOR];
+const userTypesArray = [UserType.ADMIN, UserType.CLIENT, UserType.TUTOR, UserType.TUTOR];
 
 async function genSaltedPassword(password: string): Promise<string> {
   // salting and hash password
@@ -23,7 +23,7 @@ function populate() {
       id: uuidv4(),
       firstName: faker.name.findName(),
       lastName: faker.name.findName(),
-      type: userTypesArray[Math.floor(Math.random() * 2)],
+      type: userTypesArray[Math.ceil(Math.random() * 3)],
       age: Math.floor(Math.random() * 100),
       username: faker.internet.userName(),
       phone: parseInt(faker.phone.number()),

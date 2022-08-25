@@ -40,6 +40,24 @@ export class TutorsService {
     return tutor;
   }
 
+  // find and return all the tutors data by just using the
+  // users-id provided in the params
+  async findOneByUserId(id: string): Promise<Tutor> {
+    const user = id;
+    const tutor = await this.tutorsRepository
+      .createQueryBuilder('tutors')
+      .leftJoinAndSelect('tutors.user', 'user')
+      .leftJoinAndSelect('tutors.weeklyAvailabilities', 'weeklyAvailabilities')
+      .leftJoinAndSelect('tutors.bookings', 'bookings')
+      .where('tutors.user = :user', { user })
+      .getOne();
+
+    if (!tutor) {
+      throw new NotFoundException(`Cannot find tutor with ID: ${id}`);
+    }
+    return tutor;
+  }
+
   async createWeeklyAvailabilities(id: string, weeklyAvailabilities: WeeklyAvailability[]): Promise<Tutor> {
     const tutor = await this.findOne(id);
 

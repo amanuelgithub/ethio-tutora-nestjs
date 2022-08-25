@@ -16,9 +16,16 @@ export class TutorsController {
     return this.tutorsService.findAll();
   }
 
-  @Get('/:id')
+  @Get('/tutor-id/:id')
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
   findOne(@Param('id') id: string): Promise<Tutor> {
     return this.tutorsService.findOne(id);
+  }
+
+  @Get('/user-id/:id')
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
+  findOneByUserId(@Param('id') id: string): Promise<Tutor> {
+    return this.tutorsService.findOneByUserId(id);
   }
 
   @Patch('/:id/booked-status')
