@@ -4,6 +4,7 @@ import { Booking } from 'src/bookings/entities/booking.entity';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { UpdateBookedStatusDto } from '../dtos/update-booked-status.dto';
+import { UpdateTutorDto } from '../dtos/update-tutor.dto';
 import { Tutor } from '../entities/tutor.entity';
 import { WeeklyAvailability } from '../entities/weekly-availbility.entity';
 
@@ -38,6 +39,16 @@ export class TutorsService {
       throw new NotFoundException(`Cannot find tutor with ID: ${id}`);
     }
     return tutor;
+  }
+
+  async updateOne(id: string, updateTutorDto: UpdateTutorDto): Promise<Tutor> {
+    const tutor = await this.findOne(id);
+
+    tutor.bio = updateTutorDto.bio;
+    tutor.paymentRatePerHour = updateTutorDto.paymentRatePerHour;
+    tutor.higherEducationLevel = updateTutorDto.higherEducationLevel;
+
+    return this.tutorsRepository.save(tutor);
   }
 
   // find and return all the tutors data by just using the

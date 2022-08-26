@@ -4,6 +4,7 @@ import { Action, AppAbility } from 'src/casl/casl-ability.factory';
 import { CheckPolicies } from 'src/casl/check-policy.decorator';
 import { PoliciesGuard } from 'src/casl/policies.guard';
 import { UpdateBookedStatusDto } from '../dtos/update-booked-status.dto';
+import { UpdateTutorDto } from '../dtos/update-tutor.dto';
 import { Tutor } from '../entities/tutor.entity';
 import { TutorsService } from '../services/tutors.service';
 
@@ -20,6 +21,12 @@ export class TutorsController {
   @UseGuards(JwtAuthGuard, PoliciesGuard)
   findOne(@Param('id') id: string): Promise<Tutor> {
     return this.tutorsService.findOne(id);
+  }
+
+  @Patch('/tutor/:id')
+  @UseGuards(JwtAuthGuard)
+  updateOne(@Param('id') id: string, @Body() updateTutorDto: UpdateTutorDto): Promise<Tutor> {
+    return this.tutorsService.updateOne(id, updateTutorDto);
   }
 
   @Get('/user-id/:id')
