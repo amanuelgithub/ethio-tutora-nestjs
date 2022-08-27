@@ -44,6 +44,7 @@ export class TutorsService {
   async updateOne(id: string, updateTutorDto: UpdateTutorDto): Promise<Tutor> {
     const tutor = await this.findOne(id);
 
+    tutor.title = updateTutorDto.title;
     tutor.bio = updateTutorDto.bio;
     tutor.paymentRatePerHour = updateTutorDto.paymentRatePerHour;
     tutor.higherEducationLevel = updateTutorDto.higherEducationLevel;

@@ -10,6 +10,9 @@ export class Tutor {
   id: string;
 
   @Column({ nullable: true })
+  title: string;
+
+  @Column({ nullable: true })
   bio: string;
 
   @Column({ default: TutorBookedStatus.OPEN })

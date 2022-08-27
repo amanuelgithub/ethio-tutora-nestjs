@@ -82,22 +82,21 @@ export class UsersController {
    * @param req to upload profileImage to User entity
    * @returns updated User entity data
    */
-  @Post('upload')
+  @Post('upload/:id')
   @UseGuards(PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, User))
   @UseInterceptors(FileInterceptor('file', storage))
-  uploadFile(@UploadedFile() file, @Request() req) {
-    const user: User = req.user;
+  uploadFile(@Param('id') id: string, @UploadedFile() file) {
     // uploading file is simply storing the name of the file to the users data table
     // and to store the actual data to a specific directory folder. And when their is a
     // request to the uploaded file we reference them using their name's from the database.
-    return this.usersService.updateOne(user.id, { profileImage: file.filename } as User);
+    return this.usersService.updateOne(id, { profileImage: file.filename } as User);
   }
 
   @Get('profile-image/:imagename')
   @UseGuards(PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, User))
-  findProfileImage(@Param('imagename') imagename, @Response() res): Promise<unknown> {
+  findProfileImage(@Param('imagename') imagename, @Response() res): Promise<any> {
     return res.sendFile(join(process.cwd(), 'uploads/profileimages/' + imagename));
   }
 }
