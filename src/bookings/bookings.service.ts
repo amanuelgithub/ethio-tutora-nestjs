@@ -24,16 +24,6 @@ export class BookingsService {
 
     const savedBooking = await this.bookingsRepository.save(booking);
 
-    const { client, tutor } = createBookingDto;
-
-    // whenever a client create a booking it will update
-
-    // both the tutor and client bookings.
-
-    this.clientsService.updateBookingList(client.id, savedBooking);
-
-    this.tutorsService.updateBookingList(tutor.id, savedBooking);
-
     return savedBooking;
   }
 

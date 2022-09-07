@@ -1,6 +1,5 @@
-import { Booking } from 'src/bookings/entities/booking.entity';
 import { User } from 'src/users/entities/user.entity';
-import { Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Client {
@@ -13,7 +12,4 @@ export class Client {
   })
   @JoinColumn()
   user: User;
-
-  @OneToMany(() => Booking, (booking) => booking.client)
-  bookings: Booking[];
 }

@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Booking } from 'src/bookings/entities/booking.entity';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { UpdateClientDto } from './dto/update-client.dto';
@@ -47,18 +46,18 @@ export class ClientsService {
    * called from the `bookings.service.ts`
    * updates clients booking-lists
    */
-  async updateBookingList(id: string, booking: Booking) {
-    const client = await this.findOne(id);
+  // async updateBookingList(id: string, booking: Booking) {
+  //   const client = await this.findOne(id);
 
-    const bookings = [];
-    for (const booking in client.bookings) {
-      bookings.push(client.bookings[booking]);
-    }
-    // finally add the booking sent through the parameter
-    bookings.push(booking);
+  // const bookings = [];
+  // for (const booking in client.bookings) {
+  //   bookings.push(client.bookings[booking]);
+  // }
+  // // finally add the booking sent through the parameter
+  // bookings.push(booking);
 
-    client.bookings = [booking];
+  // client.bookings = [booking];
 
-    this.clientsRepository.save(client);
-  }
+  // this.clientsRepository.save(client);
+  // }
 }

@@ -1,6 +1,4 @@
-import { Client } from 'src/clients/entities/client.entity';
-import { Tutor } from 'src/tutors/entities/tutor.entity';
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { BookingStatus } from '../enum/booking-status.enum';
 
 @Entity()
@@ -8,52 +6,50 @@ export class Booking {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // list of subjects that are selected for tutoring
-  // @ManyToMany(() => Subject)
-  // @ManyToMany(() => Subject, {
-  //   createForeignKeyConstraints: false,
-  // })
-  // @JoinTable()
-  // subjects?: Subject[];
+  @Column({ nullable: true })
+  topic?: string;
+
+  @Column({ nullable: true })
+  description?: string;
 
   // just storing the id's of the subjects
   @Column({ type: 'simple-array' })
-  subjects: string[];
+  subjects?: string[];
 
-  @ManyToOne(() => Client, (client) => client.bookings)
-  client?: Client;
+  @Column()
+  clientId?: string;
 
-  @ManyToOne(() => Tutor, (tutor) => tutor.bookings)
-  tutor?: Tutor;
+  @Column()
+  tutorId?: string;
 
   // todo: change needed on second version
-  @Column()
-  startingTime: string;
+  @Column({ nullable: true })
+  startingTime?: string;
 
-  @Column()
-  endingTime: string;
+  @Column({ nullable: true })
+  endingTime?: string;
 
   @Column({ default: BookingStatus.REQUESTED })
-  status: BookingStatus;
+  status?: BookingStatus;
 
-  @Column()
-  rate: number;
+  @Column({ nullable: true })
+  rate?: number;
 
-  @Column()
-  clientReview: string;
+  @Column({ nullable: true })
+  clientReview?: string;
 
-  @Column()
-  clientRating: number;
+  @Column({ nullable: true })
+  clientRating?: number;
 
-  @Column()
-  tutorReview: string;
+  @Column({ nullable: true })
+  tutorReview?: string;
 
-  @Column()
-  tutorRating: number;
+  @Column({ nullable: true })
+  tutorRating?: number;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @CreateDateColumn({ nullable: true })
+  createdAt?: Date;
 
-  @UpdateDateColumn()
-  modifiedAt: Date;
+  @UpdateDateColumn({ nullable: true })
+  modifiedAt?: Date;
 }

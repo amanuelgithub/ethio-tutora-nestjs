@@ -1,66 +1,59 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { Tutor } from '../../tutors/entities/tutor.entity';
-import { Client } from '../../clients/entities/client.entity';
+import { IsArray, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BookingStatus } from '../enum/booking-status.enum';
-import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateBookingDto {
-  // @Type(() => Subject)
-  // @ValidateNested({ each: true })
-  // subjects?: Subject[];
-
-  @ApiPropertyOptional()
-  @IsNotEmpty()
-  subjects: string[];
-
-  @ApiPropertyOptional()
-  @IsNotEmpty()
-  @Type(() => Client)
-  client: Client;
-
-  @ApiPropertyOptional()
-  @IsNotEmpty()
-  @Type(() => Tutor)
-  tutor: Tutor;
-
-  @ApiPropertyOptional()
-  @IsNotEmpty()
   @IsString()
-  startingTime: string;
+  clientId?: string;
 
-  @ApiPropertyOptional()
-  @IsNotEmpty()
   @IsString()
-  endingTime: string;
+  tutorId?: string;
 
   @ApiPropertyOptional()
-  @IsNotEmpty()
+  @IsString()
+  topic?: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  description?: string;
+
+  @ApiPropertyOptional()
+  @IsArray()
+  subjects?: string[];
+
+  @ApiPropertyOptional()
+  @IsString()
+  startingTime?: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  endingTime?: string;
+
+  @ApiPropertyOptional()
   @IsEnum(BookingStatus)
-  status: BookingStatus;
+  status?: BookingStatus;
 
   @ApiPropertyOptional()
-  @IsNotEmpty()
   @IsNumber()
-  rate: number;
+  rate?: number;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  clientReview: string;
+  clientReview?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
-  clientRating: number;
+  clientRating?: number;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  tutorReview: string;
+  tutorReview?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
-  tutorRating: number;
+  tutorRating?: number;
 }

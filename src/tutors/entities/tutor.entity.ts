@@ -1,4 +1,3 @@
-import { Booking } from 'src/bookings/entities/booking.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { TutorBookedStatus } from '../enum/tutor-booked-status.enum';
@@ -32,7 +31,4 @@ export class Tutor {
     eager: true,
   })
   weeklyAvailabilities: WeeklyAvailability[];
-
-  @OneToMany(() => Booking, (booking) => booking.tutor, { eager: true })
-  bookings: Booking[];
 }

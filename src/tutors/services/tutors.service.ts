@@ -108,18 +108,15 @@ export class TutorsService {
    * called from the `bookings.service.ts`
    * updates tutor's booking-lists
    */
-  async updateBookingList(id: string, booking: Booking) {
-    const tutor = await this.findOne(id);
-
-    const bookings = [];
-    for (const booking in tutor.bookings) {
-      bookings.push(tutor.bookings[booking]);
-    }
-    // finally add booking sent through the parameter
-    bookings.push(booking);
-
-    tutor.bookings = bookings;
-
-    this.tutorsRepository.save(tutor);
-  }
+  // async updateBookingList(id: string, booking: Booking) {
+  // const tutor = await this.findOne(id);
+  // const bookings = [];
+  // for (const booking in tutor.bookings) {
+  //   bookings.push(tutor.bookings[booking]);
+  // }
+  // // finally add booking sent through the parameter
+  // bookings.push(booking);
+  // tutor.bookings = bookings;
+  // this.tutorsRepository.save(tutor);
+  // }
 }
