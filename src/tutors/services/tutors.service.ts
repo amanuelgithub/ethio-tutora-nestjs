@@ -1,6 +1,5 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Booking } from 'src/bookings/entities/booking.entity';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { UpdateBookedStatusDto } from '../dtos/update-booked-status.dto';
@@ -60,7 +59,6 @@ export class TutorsService {
       .createQueryBuilder('tutors')
       .leftJoinAndSelect('tutors.user', 'user')
       .leftJoinAndSelect('tutors.weeklyAvailabilities', 'weeklyAvailabilities')
-      .leftJoinAndSelect('tutors.bookings', 'bookings')
       .where('tutors.user = :user', { user })
       .getOne();
 
