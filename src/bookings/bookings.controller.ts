@@ -29,6 +29,14 @@ export class BookingsController {
     return this.bookingsService.findAll();
   }
 
+  // endpoint -> for tutor only
+  @Get('/:tutorId')
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Booking))
+  findBookingByTutorId(@Param('tutorId') tutorId: string): Promise<Booking[]> {
+    return this.bookingsService.findBookingByTutorId(tutorId);
+  }
+
   @Get(':id')
   @UseGuards(PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Booking))
