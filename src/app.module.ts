@@ -20,7 +20,7 @@ console.log(`${process.cwd()}/src/env/${process.env.NODE_ENV}.env`);
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `${process.cwd()}/src/env/${process.env.NODE_ENV}.env`,
+      envFilePath: `${process.cwd()}/env/${process.env.NODE_ENV}.env`,
       load: Object.values([DatabaseConfig, appConfig]),
       validationSchema: validationSchema,
       isGlobal: true,

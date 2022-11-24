@@ -65,6 +65,7 @@ export class TutorsService {
     if (!tutor) {
       throw new NotFoundException(`Cannot find tutor with ID: ${id}`);
     }
+    console.log('tutor selected by user-id: ', tutor);
     return tutor;
   }
 

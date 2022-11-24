@@ -39,7 +39,11 @@ export class BookingsService {
 
   // return all list of booking for a specific tutor
   async findBookingByTutorId(tutorId: string): Promise<Booking[]> {
-    const bookings = await this.bookingsRepository.find({ where: { tutorId } });
+    // const bookings = await this.bookingsRepository.find({ where: { tutorId: tutorId } });
+    const bookings = await this.bookingsRepository
+      .createQueryBuilder('bookings')
+      .where('bookings.tutorId = :tutorId', { tutorId })
+      .getMany();
 
     if (!bookings) {
       throw new NotFoundException(`Cannot find booking for tutor with id: ${tutorId}`);

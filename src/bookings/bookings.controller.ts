@@ -30,7 +30,7 @@ export class BookingsController {
   }
 
   // endpoint -> for tutor only
-  @Get('/:tutorId')
+  @Get('/tutor/:tutorId')
   @UseGuards(PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Booking))
   findBookingByTutorId(@Param('tutorId') tutorId: string): Promise<Booking[]> {

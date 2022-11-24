@@ -37,6 +37,7 @@ export class CaslAbilityFactory {
     } else if (user.type === 'TUTOR') {
       can(Action.Update, Tutor);
       can(Action.Update, User);
+      can(Action.Read, User);
       can(Action.Manage, WeeklyAvailability);
       can(Action.Read, Booking);
       can(Action.Update, Booking);

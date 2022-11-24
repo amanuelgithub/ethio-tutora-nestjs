@@ -13,10 +13,7 @@ export class weeklyAvailabilityService {
     private tutorsService: TutorsService,
   ) {}
 
-  async createWeeklyAvailabilities(
-    id: string,
-    createAvailabilityDtos: createAvailabilityDto[] = [],
-  ): Promise<void> {
+  async createWeeklyAvailabilities(id: string, createAvailabilityDtos: createAvailabilityDto[] = []): Promise<void> {
     let availabilities: WeeklyAvailability[] = [];
 
     /**
@@ -46,10 +43,7 @@ export class weeklyAvailabilityService {
     });
 
     // store arrays of availabilities into the tutors.weeklyAvailabilities attribute
-    const tutor = await this.tutorsService.createWeeklyAvailabilities(
-      id,
-      availabilities,
-    );
+    const tutor = await this.tutorsService.createWeeklyAvailabilities(id, availabilities);
 
     availabilities.forEach((availability) => {
       availability.tutor = tutor;
@@ -63,9 +57,7 @@ export class weeklyAvailabilityService {
   }
 
   /** weekly availability of a single Tutor */
-  async findAllWeeklyAvailabilityByTutorID(
-    id: string,
-  ): Promise<WeeklyAvailability[]> {
+  async findAllWeeklyAvailabilityByTutorID(id: string): Promise<WeeklyAvailability[]> {
     // check if tutor with the provided id exist
     await this.tutorsService.findOne(id);
 
