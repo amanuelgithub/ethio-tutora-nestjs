@@ -1,19 +1,36 @@
-import { Admin } from '../../admin/entities/admin.entity';
-import { Client } from '../../clients/entities/client.entity';
-import { Tutor } from '../../tutors/entities/tutor.entity';
-import { Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { WeeklyAvailability } from 'src/tutors/entities/weekly-availbility.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { GenderEnum } from '../gender.enum';
+import { UserStatusEnum } from '../user-status.enum';
 import { UserType } from '../user-type.enum';
+import { Location } from './locations.entity';
 
 export interface IUser {
   id: string;
   firstName?: string;
-  lastName?: string;
+  fatherName?: string;
+  grandFatherName?: string;
   age?: number;
+  gender?: GenderEnum;
+  phone?: string;
   email?: string;
-  phone?: number;
-  username?: string;
-  password?: string;
-  type?: UserType;
+  isEmailConfirmed?: boolean;
+  password: string;
+  userType: UserType;
+
+  profileImage?: string;
+  status?: UserStatusEnum;
+  bio?: string;
+  isBooked?: boolean;
+  ratePerHour?: number;
 }
 
 @Entity()
@@ -21,47 +38,65 @@ export class User implements IUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
+  @Column()
   firstName?: string;
 
-  @Column({ nullable: true })
-  lastName?: string;
+  @Column()
+  fatherName?: string;
 
-  @Column({ nullable: true })
+  @Column()
+  grandFatherName?: string;
+
+  @Column()
   age?: number;
 
-  @Column({ nullable: true, unique: true })
+  @Column({ type: 'enum', enum: GenderEnum })
+  gender?: GenderEnum;
+
+  @Column({ unique: true })
+  phone?: string;
+
+  @Column({ unique: true })
   email?: string;
 
-  @Column({ nullable: true, unique: true })
-  phone?: number;
-
-  @Column({ nullable: true, unique: true })
-  username?: string;
+  @Column({ type: 'boolean', default: false })
+  isEmailConfirmed?: boolean;
 
   @Column()
-  password?: string;
+  password: string;
 
-  @Column()
-  type?: UserType;
+  @Column({ type: 'enum', enum: UserType, default: UserType.TUTOR })
+  userType: UserType;
 
   @Column({ nullable: true })
-  profileImage: string;
+  profileImage?: string;
 
-  // specify inverse side as a second parameter
-  @OneToOne(() => Client, { onDelete: 'CASCADE' })
-  client?: Client;
+  @Column({
+    type: 'enum',
+    enum: UserStatusEnum,
+    default: UserStatusEnum.INACTIVE,
+  })
+  status?: UserStatusEnum;
 
-  // specify inverse side as a second parameter
-  @OneToOne(() => Tutor, { onDelete: 'CASCADE' })
-  tutor?: Tutor;
+  @Column()
+  bio?: string;
 
-  @OneToOne(() => Admin, { onDelete: 'CASCADE' })
-  admin?: Admin;
+  @Column()
+  isBooked?: boolean;
+
+  @Column()
+  ratePerHour?: number;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
-  modifiedAt: Date;
+  updatedAt: Date;
+
+  // relation entity fields //
+  @OneToOne(() => Location, (location) => location.user, { eager: true })
+  location: Location;
+
+  @OneToMany(() => WeeklyAvailability, (availabilities) => availabilities.user)
+  availabilities?: WeeklyAvailability[];
 }

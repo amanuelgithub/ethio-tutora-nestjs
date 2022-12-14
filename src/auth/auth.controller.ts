@@ -6,7 +6,10 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService, private caslAbilityFactory: CaslAbilityFactory) {}
+  constructor(
+    private authService: AuthService,
+    private caslAbilityFactory: CaslAbilityFactory,
+  ) {}
 
   @Post('signup')
   signup(@Body() signupDto: SignUpDto): Promise<void> {

@@ -1,13 +1,10 @@
 import { registerAs } from '@nestjs/config';
-import { Client } from '../clients/entities/client.entity';
 import { DATABASE_NAME, DB_CONFIG } from '../commons/constants';
-import { Tutor } from '../tutors/entities/tutor.entity';
 import { WeeklyAvailability } from '../tutors/entities/weekly-availbility.entity';
 import { User } from '../users/entities/user.entity';
 import { DataSourceOptions } from 'typeorm';
 import { Subject } from '../subjects/entities/subject.entity';
 import { Booking } from '../bookings/entities/booking.entity';
-import { Admin } from 'src/admin/entities/admin.entity';
 
 import * as dotenv from 'dotenv';
 
@@ -51,7 +48,7 @@ const postgresqlDataSourceOption: DataSourceOptions = {
 const sqliteDataSourceOption: DataSourceOptions = {
   type: 'sqlite',
   database: process.env.ET_TUTORA_DB_NAME || DATABASE_NAME,
-  entities: [User, Tutor, Client, WeeklyAvailability, Subject, Booking, Admin],
+  entities: [User, WeeklyAvailability, Subject, Booking],
   // replaced with `autoLoadEntities: true` to automatically import all the entities
   logging: true,
   migrationsRun: true,

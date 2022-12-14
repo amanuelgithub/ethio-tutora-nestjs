@@ -8,12 +8,9 @@ import { appConfig } from './config/app.config';
 import { validationSchema } from './config/env.validation';
 import { AuthModule } from './auth/auth.module';
 import { TutorsModule } from './tutors/tutors.module';
-import { ClientsModule } from './clients/clients.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { BookingsModule } from './bookings/bookings.module';
-import { AdminModule } from './admin/admin.module';
 import { CaslModule } from './casl/casl.module';
-import { SeedersModule } from './database/seeders/seeders.module';
 
 console.log(`${process.cwd()}/src/env/${process.env.NODE_ENV}.env`);
 
@@ -40,17 +37,11 @@ console.log(`${process.cwd()}/src/env/${process.env.NODE_ENV}.env`);
 
     TutorsModule,
 
-    ClientsModule,
-
     SubjectsModule,
 
     BookingsModule,
 
-    AdminModule,
-
     CaslModule,
-
-    SeedersModule,
   ],
 })
 export class AppModule {}

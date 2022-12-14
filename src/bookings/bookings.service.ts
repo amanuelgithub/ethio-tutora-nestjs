@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ClientsService } from '../clients/clients.service';
 import { TutorsService } from '../tutors/services/tutors.service';
 import { Repository } from 'typeorm';
 import { CreateBookingDto } from './dto/create-booking.dto';
@@ -13,10 +12,7 @@ import { CancelBookingDto } from './dto/cancel-booking.dto';
 export class BookingsService {
   constructor(
     @InjectRepository(Booking) private bookingsRepository: Repository<Booking>,
-
     private tutorsService: TutorsService,
-
-    private clientsService: ClientsService,
   ) {}
 
   async create(createBookingDto: CreateBookingDto): Promise<Booking> {
@@ -46,7 +42,9 @@ export class BookingsService {
       .getMany();
 
     if (!bookings) {
-      throw new NotFoundException(`Cannot find booking for tutor with id: ${tutorId}`);
+      throw new NotFoundException(
+        `Cannot find booking for tutor with id: ${tutorId}`,
+      );
     }
     return bookings;
   }
@@ -61,7 +59,10 @@ export class BookingsService {
     return booking;
   }
 
-  async update(id: string, updateBookingDto: UpdateBookingDto): Promise<Booking> {
+  async update(
+    id: string,
+    updateBookingDto: UpdateBookingDto,
+  ): Promise<Booking> {
     const booking = await this.findOne(id);
 
     Object.assign(booking, updateBookingDto);
@@ -85,7 +86,10 @@ export class BookingsService {
   // 3. CANCELED = 'Canceled' => handled by client
   // 4. ENDED = 'Ended' => handled by the system
 
-  async acceptBooking(id: string, acceptBookingDto: AcceptBookingDto): Promise<Booking> {
+  async acceptBooking(
+    id: string,
+    acceptBookingDto: AcceptBookingDto,
+  ): Promise<Booking> {
     const booking = await this.findOne(id);
 
     const { status } = acceptBookingDto;
@@ -95,7 +99,10 @@ export class BookingsService {
     return await this.bookingsRepository.save(booking);
   }
 
-  async cancelBooking(id: string, cancelBookingDto: CancelBookingDto): Promise<Booking> {
+  async cancelBooking(
+    id: string,
+    cancelBookingDto: CancelBookingDto,
+  ): Promise<Booking> {
     const booking = await this.findOne(id);
 
     const { status } = cancelBookingDto;

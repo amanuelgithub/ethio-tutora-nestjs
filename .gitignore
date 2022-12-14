@@ -8,7 +8,7 @@ npm-debug.log
 .DS_Store
 /*.env
 
-uploads
+/uploads
 
 # Ignore the default SQLite database.
 ethio_tutora_db

@@ -7,7 +7,4 @@ export class Subject {
 
   @Column({ unique: true })
   name: string;
-
-  @Column()
-  description: string;
 }

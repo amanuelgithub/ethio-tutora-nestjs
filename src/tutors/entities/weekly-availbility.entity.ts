@@ -1,20 +1,18 @@
+import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Tutor } from './tutor.entity';
+import { DaysEnum } from '../enum/days.enum';
 
 @Entity()
 export class WeeklyAvailability {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
-  day: string; // "Monday"
+  @Column({ type: 'enum', enum: DaysEnum })
+  day: DaysEnum;
 
-  @Column({ nullable: true })
-  from: string; // "10:00 pm"
+  @Column()
+  times: string;
 
-  @Column({ nullable: true })
-  to: string; // "1:00 am"
-
-  @ManyToOne((_type) => Tutor, (tutor) => tutor.weeklyAvailabilities)
-  tutor: Tutor;
+  @ManyToOne(() => User, (user) => user.availabilities)
+  user: User;
 }

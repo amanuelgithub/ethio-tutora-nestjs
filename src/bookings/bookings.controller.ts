@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Action, AppAbility } from 'src/casl/casl-ability.factory';
 import { CheckPolicies } from 'src/casl/check-policy.decorator';
@@ -47,7 +56,10 @@ export class BookingsController {
   @Patch(':id')
   @UseGuards(PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, Booking))
-  update(@Param('id') id: string, @Body() updateBookingDto: UpdateBookingDto): Promise<Booking> {
+  update(
+    @Param('id') id: string,
+    @Body() updateBookingDto: UpdateBookingDto,
+  ): Promise<Booking> {
     return this.bookingsService.update(id, updateBookingDto);
   }
 
@@ -61,14 +73,20 @@ export class BookingsController {
   @Patch(':id/accept')
   @UseGuards(PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, Booking))
-  acceptBooking(@Param('id') id: string, @Body() acceptBookingDto: AcceptBookingDto): Promise<Booking> {
+  acceptBooking(
+    @Param('id') id: string,
+    @Body() acceptBookingDto: AcceptBookingDto,
+  ): Promise<Booking> {
     return this.bookingsService.acceptBooking(id, acceptBookingDto);
   }
 
   @Patch(':id/cancel')
   @UseGuards(PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, Booking))
-  cancelBooking(@Param('id') id: string, @Body() cancelBookingDto: CancelBookingDto): Promise<Booking> {
+  cancelBooking(
+    @Param('id') id: string,
+    @Body() cancelBookingDto: CancelBookingDto,
+  ): Promise<Booking> {
     return this.bookingsService.cancelBooking(id, cancelBookingDto);
   }
 }

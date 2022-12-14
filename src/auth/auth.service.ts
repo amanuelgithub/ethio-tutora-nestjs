@@ -1,21 +1,18 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { SignUpDto } from './dto/signup.dto';
 import * as bcrypt from 'bcrypt';
-import { TutorsService } from 'src/tutors/services/tutors.service';
 import { JwtService } from '@nestjs/jwt';
-import { UserType } from 'src/users/user-type.enum';
-import { Tutor } from 'src/tutors/entities/tutor.entity';
-import { Client } from 'src/clients/entities/client.entity';
-import { ClientsService } from 'src/clients/clients.service';
-import { Admin } from 'src/admin/entities/admin.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private tutorsService: TutorsService,
-    private clientsService: ClientsService,
     private jwtService: JwtService,
   ) {}
 
@@ -34,28 +31,17 @@ export class AuthService {
     }
   }
 
-  private async signupWithEmail(email: string, hashedPassword: string, type: any): Promise<void> {
+  private async signupWithEmail(
+    email: string,
+    hashedPassword: string,
+    type: any,
+  ): Promise<void> {
     const oldUser = await this.usersService.findUserByEmail(email);
 
     if (!oldUser) {
       // create new user
       const user = await this.usersService.signup(type, hashedPassword, email);
-      // register to other tables based on the UserType enum
-      console.log('User Type ===> ', user.type);
-      if (user.type == UserType.TUTOR) {
-        const tutor = new Tutor();
-        tutor.user = user;
-
-        this.tutorsService.signup(tutor);
-      } else if (user.type === UserType.CLIENT) {
-        const client = new Client();
-        client.user = user;
-
-        this.clientsService.signUpClient(client);
-      } else if (user.type === UserType.ADMIN) {
-        const admin = new Admin();
-        admin.user = user;
-      }
+      const tutor = new User();
     } else {
       // else throw conflict exception (although not working as intended.)
       throw new ConflictException(`Email: ${email} is already taken!`);

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsEnum, IsNotEmpty } from 'class-validator';
+import { IsEnum, IsNotEmpty } from 'class-validator';
 import { TutorBookedStatus } from '../enum/tutor-booked-status.enum';
 
 export class UpdateBookedStatusDto {
