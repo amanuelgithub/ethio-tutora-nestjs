@@ -1,13 +1,10 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import { SignUpDto } from './dto/signup.dto';
+import { EmailSignUpDto } from './dto/email-signup.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/entities/user.entity';
+import { PhoneSignUpDto } from './dto/phone-signup.dto';
 
 @Injectable()
 export class AuthService {
@@ -16,36 +13,44 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signup(signUpDto: SignUpDto): Promise<void> {
-    const { email, password, type } = signUpDto;
+  async signupClient(phoneSignUpDto: PhoneSignUpDto): Promise<User> {
+    const { phone, password } = phoneSignUpDto;
 
-    // salting and hash password
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    if (email) {
-      this.signupWithEmail(email, hashedPassword, type);
-    } else {
-      // both email and phone is empty
-      throw new BadRequestException(' Email Field cannot be empty!');
+    const userExists = await this.usersService.findUserByPhone(phone);
+
+    if (userExists) {
+      throw new ConflictException(`Phone ${phone} taken`);
     }
+
+    const data = {
+      ...phoneSignUpDto,
+      password: hashedPassword,
+    } as PhoneSignUpDto;
+
+    return this.usersService.signupWithPhone(data);
   }
 
-  private async signupWithEmail(
-    email: string,
-    hashedPassword: string,
-    type: any,
-  ): Promise<void> {
-    const oldUser = await this.usersService.findUserByEmail(email);
+  async signupTutor(emailSignUpDto: EmailSignUpDto): Promise<User> {
+    const { email, password } = emailSignUpDto;
 
-    if (!oldUser) {
-      // create new user
-      const user = await this.usersService.signup(type, hashedPassword, email);
-      const tutor = new User();
-    } else {
-      // else throw conflict exception (although not working as intended.)
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const userExists = await this.usersService.findUserByEmail(email);
+
+    if (userExists) {
       throw new ConflictException(`Email: ${email} is already taken!`);
     }
+
+    const data = {
+      ...emailSignUpDto,
+      password: hashedPassword,
+    } as EmailSignUpDto;
+
+    return this.usersService.signupWithEmail(data);
   }
 
   async login(user: any) {
@@ -59,9 +64,19 @@ export class AuthService {
     };
   }
 
-  // used by the local.strategy.ts
-  async validateUser(email: string, pass: string): Promise<any> {
+  // used by the email-local.strategy.ts
+  async validateUserByEmail(email: string, pass: string): Promise<any> {
     const user = await this.usersService.findUserByEmail(email);
+    if (user && (await bcrypt.compare(pass, user.password))) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
+
+  // used by the phone-local.strategy.ts
+  async validateUserByPhone(phone: string, pass: string): Promise<any> {
+    const user = await this.usersService.findUserByPhone(phone);
     if (user && (await bcrypt.compare(pass, user.password))) {
       const { password, ...result } = user;
       return result;

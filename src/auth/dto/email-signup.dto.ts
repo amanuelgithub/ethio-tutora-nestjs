@@ -1,20 +1,27 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
-  IsEnum,
   IsNotEmpty,
   IsString,
   MaxLength,
   MinLength,
   Matches,
-  IsPhoneNumber,
   IsEmail,
-  IsOptional,
 } from 'class-validator';
 import { UserType } from 'src/users/user-type.enum';
 
-export class SignUpDto {
+export class EmailSignUpDto {
   @ApiPropertyOptional()
-  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  firstName: string;
+
+  @ApiPropertyOptional()
+  @IsNotEmpty()
+  @IsString()
+  fatherName: string;
+
+  @ApiPropertyOptional()
+  @IsNotEmpty()
   @IsEmail()
   email: string;
 
@@ -30,6 +37,6 @@ export class SignUpDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsEnum(UserType)
-  type: UserType;
+  @Matches(UserType.TUTOR)
+  userType: UserType;
 }

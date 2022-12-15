@@ -1,41 +1,28 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsNotEmpty,
-  IsNumber,
   IsString,
-  Matches,
   MaxLength,
   MinLength,
+  Matches,
 } from 'class-validator';
+import { UserType } from 'src/users/user-type.enum';
 
-export class CreateUserDto {
-  @ApiProperty()
+export class PhoneSignUpDto {
+  @ApiPropertyOptional()
   @IsNotEmpty()
   @IsString()
-  @MinLength(3)
   firstName: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsNotEmpty()
   @IsString()
-  @MinLength(3)
-  lastName: string;
+  fatherName: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  age: number;
-
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsNotEmpty()
   @IsString()
-  email: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(4)
-  username: string;
+  phone: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -46,4 +33,9 @@ export class CreateUserDto {
     message: 'Password is too weak!',
   })
   password: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @Matches(UserType.CLIENT)
+  userType: UserType;
 }

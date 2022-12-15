@@ -1,4 +1,12 @@
-import { Controller, Get, Param, Response, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Response,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 // import { FileInterceptor } from '@nestjs/platform-express';
@@ -11,6 +19,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { PoliciesGuard } from 'src/casl/policies.guard';
 import { CheckPolicies } from 'src/casl/check-policy.decorator';
 import { Action, AppAbility } from 'src/casl/casl-ability.factory';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 /**
  * used to store the uploaded profileImages to the
@@ -35,12 +44,20 @@ export const storage = {
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @Get()
-  // @UseGuards(PoliciesGuard)
-  // @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, User))
-  // findAll(): Promise<User[]> {
-  //   return this.usersService.findAllUsers();
-  // }
+  @Get()
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, User))
+  findAll(): Promise<User[]> {
+    return this.usersService.findAllUsers();
+  }
+
+  @Patch(':id/change-password')
+  changePassword(
+    @Param('id') id: string,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ): Promise<User> {
+    return this.usersService.changePassword(id, changePasswordDto);
+  }
 
   // @Get('/:id')
   // @UseGuards(PoliciesGuard)

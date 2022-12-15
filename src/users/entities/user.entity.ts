@@ -38,28 +38,28 @@ export class User implements IUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ nullable: true })
   firstName?: string;
 
-  @Column()
+  @Column({ nullable: true })
   fatherName?: string;
 
-  @Column()
+  @Column({ nullable: true })
   grandFatherName?: string;
 
-  @Column()
+  @Column({ nullable: true })
   age?: number;
 
-  @Column({ type: 'enum', enum: GenderEnum })
+  @Column({ type: 'enum', enum: GenderEnum, nullable: true })
   gender?: GenderEnum;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   phone?: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   email?: string;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', default: false, nullable: true })
   isEmailConfirmed?: boolean;
 
   @Column()
@@ -78,13 +78,13 @@ export class User implements IUser {
   })
   status?: UserStatusEnum;
 
-  @Column()
+  @Column({ nullable: true })
   bio?: string;
 
-  @Column()
+  @Column({ nullable: true })
   isBooked?: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   ratePerHour?: number;
 
   @CreateDateColumn()

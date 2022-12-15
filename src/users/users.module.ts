@@ -4,9 +4,10 @@ import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CaslModule } from 'src/casl/casl.module';
 import { UsersRepository } from './users.repository';
+import { User } from './entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UsersRepository]), CaslModule],
+  imports: [TypeOrmModule.forFeature([User, UsersRepository]), CaslModule],
   controllers: [UsersController],
   providers: [UsersService, UsersRepository],
   exports: [UsersService, UsersRepository],

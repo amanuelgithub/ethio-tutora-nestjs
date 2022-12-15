@@ -1,24 +1,33 @@
 import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
-import { CaslAbilityFactory } from 'src/casl/casl-ability.factory';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/users/entities/user.entity';
 import { AuthService } from './auth.service';
-import { SignUpDto } from './dto/signup.dto';
-import { LocalAuthGuard } from './guards/local-auth.guard';
+import { EmailSignUpDto } from './dto/email-signup.dto';
+import { PhoneSignUpDto } from './dto/phone-signup.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private caslAbilityFactory: CaslAbilityFactory,
-  ) {}
+  constructor(private authService: AuthService) {}
 
-  @Post('signup')
-  signup(@Body() signupDto: SignUpDto): Promise<void> {
-    return this.authService.signup(signupDto);
+  @Post('client-signup')
+  signupClient(@Body() phoneSignUpDto: PhoneSignUpDto): Promise<User> {
+    return this.authService.signupClient(phoneSignUpDto);
   }
 
-  @UseGuards(LocalAuthGuard)
-  @Post('signin')
-  async login(@Request() req) {
+  @Post('tutor-signup')
+  signupTutor(@Body() emailSignUpDto: EmailSignUpDto): Promise<User> {
+    return this.authService.signupTutor(emailSignUpDto);
+  }
+
+  @UseGuards(AuthGuard('client'))
+  @Post('signin-client')
+  async signinClient(@Request() req) {
+    return this.authService.login(req.user);
+  }
+
+  @UseGuards(AuthGuard('tutor'))
+  @Post('signin-tutor')
+  async signinTutor(@Request() req) {
     return this.authService.login(req.user);
   }
 }

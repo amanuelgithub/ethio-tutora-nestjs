@@ -5,9 +5,10 @@ import { UsersModule } from 'src/users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
-import { LocalStrategy } from './strategies/local.strategy';
+import { EmailLocalStrategy } from './strategies/email-local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { CaslModule } from 'src/casl/casl.module';
+import { PhoneLocalStrategy } from './strategies/phone-local.strategy';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { CaslModule } from 'src/casl/casl.module';
     UsersModule,
     CaslModule,
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, EmailLocalStrategy, PhoneLocalStrategy, JwtStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}
