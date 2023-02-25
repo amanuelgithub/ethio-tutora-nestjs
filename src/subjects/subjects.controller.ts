@@ -29,11 +29,15 @@ export class SubjectsController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Subject))
   findAll(): Promise<Subject[]> {
     return this.subjectsService.findAll();
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Subject))
   findOne(@Param('id') id: string) {
     return this.subjectsService.findOne(id);
   }

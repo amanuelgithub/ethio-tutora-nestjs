@@ -10,25 +10,25 @@ import { TutorAuthGuard } from './guards/tutor-auth.guard';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('client-signup')
+  @Post('phone-signup')
   signupClient(@Body() phoneSignUpDto: PhoneSignUpDto): Promise<User> {
     return this.authService.signupClient(phoneSignUpDto);
   }
 
-  @Post('tutor-signup')
+  @Post('email-signup')
   signupTutor(@Body() emailSignUpDto: EmailSignUpDto): Promise<User> {
     return this.authService.signupTutor(emailSignUpDto);
   }
 
   @UseGuards(ClientAuthGuard)
-  @Post('signin-client')
+  @Post('signin-phone')
   async signinClient(@Request() req) {
     // console.log('requesting client', req.user);
     return this.authService.login(req.user);
   }
 
   @UseGuards(TutorAuthGuard)
-  @Post('signin-tutor')
+  @Post('signin-email')
   async signinTutor(@Request() req) {
     // console.log('requesting tutor', req.user);
     return this.authService.login(req.user);
