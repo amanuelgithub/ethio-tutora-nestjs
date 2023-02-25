@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common/exceptions';
 import { User } from 'src/users/entities/user.entity';
-import { UserType } from 'src/users/user-type.enum';
+import { UserType } from 'src/users/enums/user-type.enum';
 import { UsersRepository } from 'src/users/users.repository';
 import { UpdateTutorDetailDto } from '../dtos/update-tutor-detail.dto';
 
@@ -10,7 +10,10 @@ export class TutorsService {
   constructor(private usersRepository: UsersRepository) {}
 
   async findOneTutor(id: string): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id } });
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id })
+      .getOne();
 
     const { password, isEmailConfirmed, userType, status, ...remaining } = user;
 
@@ -22,6 +25,8 @@ export class TutorsService {
     id: string,
     updateTutorDetailDto: UpdateTutorDetailDto,
   ): Promise<User> {
+    console.log('Update Tutor Detail', updateTutorDetailDto);
+
     const {
       age,
       bio,
@@ -57,6 +62,7 @@ export class TutorsService {
     const tutors = await this.usersRepository
       .createQueryBuilder('user')
       .select([
+        'user.id',
         'user.firstName',
         'user.fatherName',
         'user.grandFatherName',

@@ -8,9 +8,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { GenderEnum } from '../gender.enum';
-import { UserStatusEnum } from '../user-status.enum';
-import { UserType } from '../user-type.enum';
+import { GenderEnum } from '../enums/gender.enum';
+import { UserStatusEnum } from '../enums/user-status.enum';
+import { UserType } from '../enums/user-type.enum';
 import { Location } from './locations.entity';
 
 export interface IUser {

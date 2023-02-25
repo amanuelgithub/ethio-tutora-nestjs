@@ -6,6 +6,7 @@ import {
   InferSubjects,
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
+import { UserType } from 'src/users/enums/user-type.enum';
 import { Booking } from '../bookings/entities/booking.entity';
 import { Subject } from '../subjects/entities/subject.entity';
 import { WeeklyAvailability } from '../tutors/entities/weekly-availbility.entity';
@@ -28,19 +29,19 @@ export type AppAbility = Ability<[Action, Subjects]>;
 
 @Injectable()
 export class CaslAbilityFactory {
-  createForUser(user: User) {
+  createForUser(user: any) {
     const { can, cannot, build } = new AbilityBuilder<
       Ability<[Action, Subjects]>
     >(Ability as AbilityClass<AppAbility>);
 
-    if (user.userType === 'ADMIN') {
+    if (user?.userType === UserType.ADMIN) {
       // gives fullright over-all subjects
       can(Action.Manage, 'all');
-    } else if (user.userType === 'CLIENT') {
+    } else if (user?.userType === UserType.CLIENT) {
       can(Action.Manage, Booking);
       can(Action.Read, WeeklyAvailability);
       can(Action.Read, Subject);
-    } else if (user.userType === 'TUTOR') {
+    } else if (user?.userType === UserType.TUTOR) {
       can(Action.Update, User);
       can(Action.Read, User);
       can(Action.Manage, WeeklyAvailability);

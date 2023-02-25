@@ -12,6 +12,7 @@ import { PhoneLocalStrategy } from './strategies/phone-local.strategy';
 
 @Module({
   imports: [
+    UsersModule,
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
@@ -19,7 +20,6 @@ import { PhoneLocalStrategy } from './strategies/phone-local.strategy';
         expiresIn: 3600,
       },
     }),
-    UsersModule,
     CaslModule,
   ],
   providers: [AuthService, EmailLocalStrategy, PhoneLocalStrategy, JwtStrategy],

@@ -4,8 +4,12 @@ import {
   Get,
   Param,
   Patch,
+  Post,
+  Req,
   Response,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
@@ -20,6 +24,8 @@ import { PoliciesGuard } from 'src/casl/policies.guard';
 import { CheckPolicies } from 'src/casl/check-policy.decorator';
 import { Action, AppAbility } from 'src/casl/casl-ability.factory';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 /**
  * used to store the uploaded profileImages to the
@@ -39,19 +45,21 @@ export const storage = {
   }),
 };
 
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @UseGuards(PoliciesGuard)
+  @UseGuards(JwtAuthGuard)
+  // @UseGuards(PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, User))
   findAll(): Promise<User[]> {
     return this.usersService.findAllUsers();
   }
 
   @Patch(':id/change-password')
+  @UseGuards(JwtAuthGuard)
   changePassword(
     @Param('id') id: string,
     @Body() changePasswordDto: ChangePasswordDto,
@@ -59,47 +67,25 @@ export class UsersController {
     return this.usersService.changePassword(id, changePasswordDto);
   }
 
-  // @Get('/:id')
-  // @UseGuards(PoliciesGuard)
-  // @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, User))
-  // findOne(@Param('id') id: string): Promise<User> {
-  //   return this.usersService.findUserById(id);
-  // }
-
-  // @Patch('/:id')
+  @Post('upload/:id')
+  @UseGuards(JwtAuthGuard)
   // @UseGuards(PoliciesGuard)
   // @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, User))
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
-  //   return this.usersService.updateUser(id, updateUserDto);
-  // }
-
-  // @Delete('/:id')
-  // @UseGuards(PoliciesGuard)
-  // @CheckPolicies((ability: AppAbility) => ability.can(Action.Delete, User))
-  // remove(@Param('id') id: string): Promise<void> {
-  //   return this.usersService.deleteUser(id);
-  // }
-
-  /**
-   *
-   * @param file Images with jpeg or png file extensions
-   * @param req to upload profileImage to User entity
-   * @returns updated User entity data
-   */
-  // @Post('upload/:id')
-  // @UseGuards(PoliciesGuard)
-  // @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, User))
-  // @UseInterceptors(FileInterceptor('file', storage))
-  // uploadFile(@Param('id') id: string, @UploadedFile() file) {
-  //   // uploading file is simply storing the name of the file to the users data table
-  //   // and to store the actual data to a specific directory folder. And when their is a
-  //   // request to the uploaded file we reference them using their name's from the database.
-  //   return this.usersService.updateOne(id, { profileImage: file.filename } as User);
-  // }
+  @UseInterceptors(FileInterceptor('file', storage))
+  uploadFile(@Req() req, @Param('id') id: string, @UploadedFile() file) {
+    // uploading file is simply storing the name of the file to the users data table
+    // and to store the actual data to a specific directory folder. And when their is a
+    // request to the uploaded file we reference them using their name's from the database.
+    console.log('Requesting user', req.user);
+    console.log('file: ', file);
+    return this.usersService.updateProfileImage(id, {
+      profileImage: file.filename,
+    } as UpdateProfileDto);
+  }
 
   @Get('profile-image/:imagename')
-  @UseGuards(PoliciesGuard)
-  @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, User))
+  // @UseGuards(PoliciesGuard)
+  // @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, User))
   findProfileImage(
     @Param('imagename') imagename,
     @Response() res,

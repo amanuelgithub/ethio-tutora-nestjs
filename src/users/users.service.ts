@@ -5,7 +5,9 @@ import { EmailSignUpDto } from 'src/auth/dto/email-signup.dto';
 import { PhoneSignUpDto } from 'src/auth/dto/phone-signup.dto';
 import { Repository } from 'typeorm';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import { User } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -40,6 +42,13 @@ export class UsersService {
   async findUserByPhone(phone: string): Promise<User> {
     const user = this.usersRepository
       .createQueryBuilder('user')
+      .select([
+        'user.id',
+        'user.phone',
+        'user.userType',
+        'user.password',
+        'user.profileImage',
+      ])
       .where('user.phone = :phone', { phone })
       .getOne();
 
@@ -47,10 +56,21 @@ export class UsersService {
   }
 
   async findUserByEmail(email: string): Promise<User> {
-    const user = this.usersRepository
+    const user = await this.usersRepository
       .createQueryBuilder('user')
-      .where('user.email = :email', { email })
+      .select([
+        'user.id',
+        'user.email',
+        'user.userType',
+        'user.password',
+        'user.profileImage',
+      ])
+      .where('user.email =:email', { email })
       .getOne();
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
     return user;
   }
@@ -68,6 +88,18 @@ export class UsersService {
     return user;
   }
 
+  async updateProfileImage(
+    id: string,
+    updateProfileDto: UpdateProfileDto,
+  ): Promise<void> {
+    const { profileImage } = updateProfileDto;
+    const user = await this.findUserById(id);
+
+    user.profileImage = profileImage;
+
+    await this.usersRepository.save(user);
+  }
+
   // change password
   async changePassword(
     id: string,
@@ -77,7 +109,10 @@ export class UsersService {
 
     const user = await this.findUserById(id);
 
-    user.password = password;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    user.password = hashedPassword;
 
     await this.usersRepository.save(user);
 

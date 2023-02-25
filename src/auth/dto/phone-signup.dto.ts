@@ -6,7 +6,7 @@ import {
   MinLength,
   Matches,
 } from 'class-validator';
-import { UserType } from 'src/users/user-type.enum';
+import { UserType } from 'src/users/enums/user-type.enum';
 
 export class PhoneSignUpDto {
   @ApiPropertyOptional()

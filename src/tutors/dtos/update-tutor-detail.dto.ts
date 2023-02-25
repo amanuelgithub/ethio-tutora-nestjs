@@ -1,5 +1,5 @@
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { GenderEnum } from 'src/users/gender.enum';
+import { GenderEnum } from 'src/users/enums/gender.enum';
 
 export class UpdateTutorDetailDto {
   @IsOptional()
@@ -19,7 +19,7 @@ export class UpdateTutorDetailDto {
   age?: number;
 
   @IsOptional()
-  @IsEnum({ enum: GenderEnum })
+  @IsEnum(GenderEnum)
   gender?: GenderEnum;
 
   @IsOptional()
