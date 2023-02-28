@@ -83,7 +83,7 @@ export class UsersController {
     } as UpdateProfileDto);
   }
 
-  @Get('profile-image/:imagename')
+  @Get('profile-images/:imagename')
   // @UseGuards(PoliciesGuard)
   // @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, User))
   findProfileImage(
