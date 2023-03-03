@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common/exceptions';
 import { User } from 'src/users/entities/user.entity';
 import { UserType } from 'src/users/enums/user-type.enum';
-import { UsersRepository } from 'src/users/users.repository';
+import { UsersRepository } from 'src/users/repositories/users.repository';
 import { UpdateTutorDetailDto } from '../dtos/update-tutor-detail.dto';
 
 @Injectable()

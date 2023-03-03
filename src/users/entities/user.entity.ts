@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -94,7 +95,11 @@ export class User implements IUser {
   updatedAt: Date;
 
   // relation entity fields //
-  @OneToOne(() => Location, (location) => location.user, { eager: true })
+  @OneToOne(() => Location, (location) => location.user, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
+  @JoinColumn()
   location: Location;
 
   @OneToMany(() => WeeklyAvailability, (availabilities) => availabilities.user)

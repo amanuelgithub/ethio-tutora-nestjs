@@ -4,9 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EmailSignUpDto } from 'src/auth/dto/email-signup.dto';
 import { PhoneSignUpDto } from 'src/auth/dto/phone-signup.dto';
 import { Repository } from 'typeorm';
-import { ChangePasswordDto } from './dto/change-password.dto';
-import { UpdateProfileDto } from './dto/update-profile.dto';
-import { User } from './entities/user.entity';
+import { ChangePasswordDto } from '../dto/change-password.dto';
+import { UpdateProfileDto } from '../dto/update-profile.dto';
+import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -68,16 +68,13 @@ export class UsersService {
       .where('user.email =:email', { email })
       .getOne();
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
     return user;
   }
 
   async findUserById(id: string): Promise<User> {
     const user = await this.usersRepository
       .createQueryBuilder('user')
+      .leftJoinAndSelect('user.location', 'location')
       .where('user.id = :id', { id })
       .getOne();
 
@@ -117,5 +114,22 @@ export class UsersService {
     await this.usersRepository.save(user);
 
     return { password } as User;
+  }
+
+  // methods that are not directly used by the controllers class //
+  update(user: User): Promise<User> {
+    return this.usersRepository.save(user);
+  }
+
+  // delete user location
+  async deleteUserLocation(userId: string) {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+      relations: ['location'],
+    });
+
+    user.location = null;
+
+    await this.usersRepository.save(user);
   }
 }

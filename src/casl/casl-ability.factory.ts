@@ -6,6 +6,7 @@ import {
   InferSubjects,
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
+import { Location } from 'src/users/entities/locations.entity';
 import { UserType } from 'src/users/enums/user-type.enum';
 import { Booking } from '../bookings/entities/booking.entity';
 import { Subject } from '../subjects/entities/subject.entity';
@@ -21,7 +22,9 @@ export enum Action {
 }
 
 type Subjects =
-  | InferSubjects<typeof User | typeof Subject | typeof Booking>
+  | InferSubjects<
+      typeof User | typeof Subject | typeof Booking | typeof Location
+    >
   | typeof WeeklyAvailability
   | 'all';
 
@@ -48,6 +51,12 @@ export class CaslAbilityFactory {
       can(Action.Read, Booking);
       can(Action.Update, Booking);
       can(Action.Read, Subject);
+
+      // Location
+      can(Action.Create, Location);
+      can(Action.Read, Location);
+      can(Action.Update, Location);
+      can(Action.Delete, Location);
     }
 
     return build({
