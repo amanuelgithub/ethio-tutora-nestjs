@@ -57,7 +57,7 @@ export class TutorsService {
   }
 
   // used to show users on a list view
-  async findTutors(): Promise<User[]> {
+  async findTutorsPublicInfo(): Promise<User[]> {
     const userType = UserType.TUTOR;
     const tutors = await this.usersRepository
       .createQueryBuilder('user')
@@ -72,6 +72,37 @@ export class TutorsService {
         'user.isBooked',
         'user.ratePerHour',
       ])
+      .where('user.userType = :userType', { userType })
+      .getMany();
+
+    if (!tutors) {
+      throw new NotFoundException('no tutors found');
+    }
+
+    return tutors;
+  }
+
+  async findTutorsPrivateInfo(): Promise<User[]> {
+    const userType = UserType.TUTOR;
+    const tutors = await this.usersRepository
+      .createQueryBuilder('user')
+      .select([
+        'user.id',
+        'user.firstName',
+        'user.fatherName',
+        'user.grandFatherName',
+        'user.age',
+        'user.gender',
+        'user.phone',
+        'user.email',
+        'user.isEmailConfirmed',
+        'user.profileImage',
+        'user.status',
+        'user.bio',
+        'user.isBooked',
+        'user.ratePerHour',
+      ])
+      .leftJoinAndSelect('user.location', 'location')
       .where('user.userType = :userType', { userType })
       .getMany();
 

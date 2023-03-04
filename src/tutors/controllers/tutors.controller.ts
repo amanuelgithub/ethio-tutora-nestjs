@@ -19,12 +19,16 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 export class TutorsController {
   constructor(private tutorsService: TutorsService) {}
 
-  @Get()
-  // @UseGuards(JwtAuthGuard)
-  // @UseGuards(PoliciesGuard)
-  // @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, User))
+  @Get('/public')
+  async findTutorsPublicInfo(): Promise<User[]> {
+    return this.tutorsService.findTutorsPublicInfo();
+  }
+
+  @Get('/private')
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Manage, User))
   async findAllTutors(): Promise<User[]> {
-    return this.tutorsService.findTutors();
+    return this.tutorsService.findTutorsPrivateInfo();
   }
 
   @Get(':id')
