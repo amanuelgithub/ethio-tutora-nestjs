@@ -72,6 +72,7 @@ export class TutorsService {
         'user.isBooked',
         'user.ratePerHour',
       ])
+      .leftJoinAndSelect('user.location', 'location')
       .where('user.userType = :userType', { userType })
       .getMany();
 
