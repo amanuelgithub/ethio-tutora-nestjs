@@ -32,6 +32,10 @@ export class UpdateTutorDetailDto {
 
   @IsOptional()
   @IsString()
+  title?: string;
+
+  @IsOptional()
+  @IsString()
   profileImage?: string;
 
   @IsOptional()

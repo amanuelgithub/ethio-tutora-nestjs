@@ -30,6 +30,7 @@ export class TutorsService {
     const {
       age,
       bio,
+      title,
       email,
       fatherName,
       firstName,
@@ -50,6 +51,7 @@ export class TutorsService {
     tutor.gender = gender;
     tutor.grandFatherName = grandFatherName;
     tutor.phone = phone;
+    tutor.title = title;
     tutor.profileImage = profileImage;
     tutor.ratePerHour = ratePerHour;
 
@@ -67,6 +69,7 @@ export class TutorsService {
         'user.fatherName',
         'user.grandFatherName',
         'user.age',
+        'user.title',
         'user.profileImage',
         'user.bio',
         'user.isBooked',
@@ -97,6 +100,7 @@ export class TutorsService {
         'user.phone',
         'user.email',
         'user.isEmailConfirmed',
+        'user.title',
         'user.profileImage',
         'user.status',
         'user.bio',

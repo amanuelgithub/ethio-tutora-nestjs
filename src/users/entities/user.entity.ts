@@ -21,14 +21,19 @@ export interface IUser {
   grandFatherName?: string;
   age?: number;
   gender?: GenderEnum;
-  phone?: string;
-  email?: string;
-  isEmailConfirmed?: boolean;
   password: string;
   userType: UserType;
 
-  profileImage?: string;
   status?: UserStatusEnum;
+
+  // client specific properties
+  phone?: string;
+
+  // tutor specific properties
+  email?: string;
+  isEmailConfirmed?: boolean;
+  title: string;
+  profileImage?: string;
   bio?: string;
   isBooked?: boolean;
   ratePerHour?: number;
@@ -54,6 +59,19 @@ export class User implements IUser {
   @Column({ type: 'enum', enum: GenderEnum, nullable: true })
   gender?: GenderEnum;
 
+  @Column()
+  password: string;
+
+  @Column({ type: 'enum', enum: UserType, default: UserType.TUTOR })
+  userType: UserType;
+
+  @Column({
+    type: 'enum',
+    enum: UserStatusEnum,
+    default: UserStatusEnum.INACTIVE,
+  })
+  status?: UserStatusEnum;
+
   @Column({ unique: true, nullable: true })
   phone?: string;
 
@@ -63,21 +81,11 @@ export class User implements IUser {
   @Column({ type: 'boolean', default: false, nullable: true })
   isEmailConfirmed?: boolean;
 
-  @Column()
-  password: string;
-
-  @Column({ type: 'enum', enum: UserType, default: UserType.TUTOR })
-  userType: UserType;
+  @Column({ nullable: true, default: 'no title' })
+  title: string;
 
   @Column({ nullable: true })
   profileImage?: string;
-
-  @Column({
-    type: 'enum',
-    enum: UserStatusEnum,
-    default: UserStatusEnum.INACTIVE,
-  })
-  status?: UserStatusEnum;
 
   @Column({ nullable: true })
   bio?: string;

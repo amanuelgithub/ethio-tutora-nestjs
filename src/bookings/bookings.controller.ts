@@ -25,14 +25,14 @@ export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
 
   @Post()
-  @UseGuards(PoliciesGuard)
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Create, Booking))
   create(@Body() createBookingDto: CreateBookingDto): Promise<Booking> {
     return this.bookingsService.create(createBookingDto);
   }
 
   @Get()
-  @UseGuards(PoliciesGuard)
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Booking))
   findAll(): Promise<Booking[]> {
     return this.bookingsService.findAll();
@@ -40,21 +40,21 @@ export class BookingsController {
 
   // endpoint -> for tutor only
   @Get('/tutor/:tutorId')
-  @UseGuards(PoliciesGuard)
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Booking))
   findBookingByTutorId(@Param('tutorId') tutorId: string): Promise<Booking[]> {
     return this.bookingsService.findBookingByTutorId(tutorId);
   }
 
   @Get(':id')
-  @UseGuards(PoliciesGuard)
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Booking))
   findOne(@Param('id') id: string): Promise<Booking> {
     return this.bookingsService.findOne(id);
   }
 
   @Patch(':id')
-  @UseGuards(PoliciesGuard)
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, Booking))
   update(
     @Param('id') id: string,
@@ -64,14 +64,14 @@ export class BookingsController {
   }
 
   @Delete(':id')
-  @UseGuards(PoliciesGuard)
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Delete, Booking))
   remove(@Param('id') id: string): Promise<void> {
     return this.bookingsService.remove(id);
   }
 
   @Patch(':id/accept')
-  @UseGuards(PoliciesGuard)
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, Booking))
   acceptBooking(
     @Param('id') id: string,
@@ -81,7 +81,7 @@ export class BookingsController {
   }
 
   @Patch(':id/cancel')
-  @UseGuards(PoliciesGuard)
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, Booking))
   cancelBooking(
     @Param('id') id: string,
