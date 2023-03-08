@@ -11,6 +11,8 @@ import { TutorsModule } from './tutors/tutors.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { CaslModule } from './casl/casl.module';
+import { BookingNotificationsModule } from './booking-notifications/booking-notifications.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 console.log(`${process.cwd()}/src/env/${process.env.NODE_ENV}.env`);
 
@@ -31,6 +33,8 @@ console.log(`${process.cwd()}/src/env/${process.env.NODE_ENV}.env`);
       }),
     }),
 
+    EventEmitterModule.forRoot(),
+
     UsersModule,
 
     AuthModule,
@@ -42,6 +46,8 @@ console.log(`${process.cwd()}/src/env/${process.env.NODE_ENV}.env`);
     BookingsModule,
 
     CaslModule,
+
+    BookingNotificationsModule,
   ],
 })
 export class AppModule {}

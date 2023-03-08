@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TutorsService } from '../tutors/services/tutors.service';
 import { Repository } from 'typeorm';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
@@ -8,6 +7,8 @@ import { AcceptBookingDto } from './dto/accept-booking.dto';
 import { Booking } from './entities/booking.entity';
 import { CancelBookingDto } from './dto/cancel-booking.dto';
 import { Schedule } from './entities/schedule.entity';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { BookingCreatedEvent } from './events/booking-created.event';
 
 @Injectable()
 export class BookingsService {
@@ -16,7 +17,7 @@ export class BookingsService {
     private bookingsRepository: Repository<Booking>,
     @InjectRepository(Schedule)
     private schedulesRepository: Repository<Schedule>,
-    private tutorsService: TutorsService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async create(createBookingDto: CreateBookingDto): Promise<Booking> {
@@ -56,6 +57,13 @@ export class BookingsService {
     });
 
     const savedBooking = await this.bookingsRepository.save(booking);
+
+    // create booking events
+    const bookingCreatedEvent = new BookingCreatedEvent();
+    bookingCreatedEvent.bookingId = savedBooking.id;
+    bookingCreatedEvent.tutorId = savedBooking.tutorId;
+    bookingCreatedEvent.message = `A client with following ID: ${clientId} has made a booking for you.`;
+    this.eventEmitter.emit('booking.created', bookingCreatedEvent);
 
     return savedBooking;
   }
