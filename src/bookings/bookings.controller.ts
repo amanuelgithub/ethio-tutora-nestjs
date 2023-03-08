@@ -42,8 +42,17 @@ export class BookingsController {
   @Get('/tutor/:tutorId')
   @UseGuards(JwtAuthGuard, PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Booking))
-  findBookingByTutorId(@Param('tutorId') tutorId: string): Promise<Booking[]> {
-    return this.bookingsService.findBookingByTutorId(tutorId);
+  findBookingsByTutorId(@Param('tutorId') tutorId: string): Promise<Booking[]> {
+    return this.bookingsService.findBookingsByTutorId(tutorId);
+  }
+
+  @Get('/client/:clientId')
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Booking))
+  findBookingsByClientId(
+    @Param('clientId') clientId: string,
+  ): Promise<Booking[]> {
+    return this.bookingsService.findBookingsByClientId(clientId);
   }
 
   @Get(':id')

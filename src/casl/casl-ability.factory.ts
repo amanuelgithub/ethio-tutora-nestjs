@@ -42,6 +42,7 @@ export class CaslAbilityFactory {
       can(Action.Manage, 'all');
     } else if (user?.userType === UserType.CLIENT) {
       can(Action.Manage, Booking);
+      can(Action.Read, Booking);
       can(Action.Read, WeeklyAvailability);
       can(Action.Read, Subject);
     } else if (user?.userType === UserType.TUTOR) {
