@@ -7,16 +7,53 @@ import { UpdateBookingDto } from './dto/update-booking.dto';
 import { AcceptBookingDto } from './dto/accept-booking.dto';
 import { Booking } from './entities/booking.entity';
 import { CancelBookingDto } from './dto/cancel-booking.dto';
+import { Schedule } from './entities/schedule.entity';
 
 @Injectable()
 export class BookingsService {
   constructor(
-    @InjectRepository(Booking) private bookingsRepository: Repository<Booking>,
+    @InjectRepository(Booking)
+    private bookingsRepository: Repository<Booking>,
+    @InjectRepository(Schedule)
+    private schedulesRepository: Repository<Schedule>,
     private tutorsService: TutorsService,
   ) {}
 
   async create(createBookingDto: CreateBookingDto): Promise<Booking> {
-    const booking = this.bookingsRepository.create(createBookingDto as Booking);
+    const {
+      clientId,
+      tutorId,
+      topic,
+      description,
+      subjects,
+      schedules,
+      status,
+      rate,
+    } = createBookingDto;
+
+    // saved schedule instances
+    const scheduleInstance = [];
+    for (const schedule of schedules) {
+      const sche = this.schedulesRepository.create(schedule);
+      try {
+        await this.schedulesRepository.save(sche);
+      } catch (err: any) {
+        console.log('Error: ', err);
+      } finally {
+        scheduleInstance.push(sche);
+      }
+    }
+
+    const booking = this.bookingsRepository.create({
+      clientId,
+      tutorId,
+      topic,
+      description,
+      subjects,
+      schedules: scheduleInstance as Schedule[],
+      status,
+      rate,
+    });
 
     const savedBooking = await this.bookingsRepository.save(booking);
 

@@ -1,12 +1,14 @@
 import {
   IsArray,
   IsEnum,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
 import { BookingStatus } from '../enum/booking-status.enum';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Schedule } from '../entities/schedule.entity';
 
 export class CreateBookingDto {
   @IsString()
@@ -28,12 +30,8 @@ export class CreateBookingDto {
   subjects?: string[];
 
   @ApiPropertyOptional()
-  @IsString()
-  startingTime?: string;
-
-  @ApiPropertyOptional()
-  @IsString()
-  endingTime?: string;
+  @IsNotEmpty()
+  schedules?: any[];
 
   @ApiPropertyOptional()
   @IsEnum(BookingStatus)

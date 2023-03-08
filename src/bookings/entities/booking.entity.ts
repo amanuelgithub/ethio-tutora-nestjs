@@ -2,10 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { BookingStatus } from '../enum/booking-status.enum';
+import { Schedule } from './schedule.entity';
 
 @Entity()
 export class Booking {
@@ -27,13 +29,6 @@ export class Booking {
 
   @Column()
   tutorId?: string;
-
-  // todo: change needed on second version
-  @Column({ nullable: true })
-  startingTime?: string;
-
-  @Column({ nullable: true })
-  endingTime?: string;
 
   @Column({ default: BookingStatus.REQUESTED })
   status?: BookingStatus;
@@ -58,4 +53,9 @@ export class Booking {
 
   @UpdateDateColumn({ nullable: true })
   modifiedAt?: Date;
+
+  @OneToMany(() => Schedule, (schedule) => schedule.booking, {
+    eager: true,
+  })
+  schedules: Schedule[];
 }
