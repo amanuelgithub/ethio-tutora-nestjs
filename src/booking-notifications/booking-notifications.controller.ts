@@ -1,5 +1,7 @@
 import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Action, AppAbility } from 'src/casl/casl-ability.factory';
+import { CheckPolicies } from 'src/casl/check-policy.decorator';
 import { PoliciesGuard } from 'src/casl/policies.guard';
 import { BookingNotificationsService } from './booking-notifications.service';
 import { BookingNotifications } from './entities/booking-notifications.entity';
@@ -12,6 +14,9 @@ export class BookingNotificationsController {
 
   @Get(':tutorId')
   @UseGuards(JwtAuthGuard, PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(Action.Read, BookingNotifications),
+  )
   findBookingNotificationsOfTutor(
     @Req() req,
     @Param('tutorId') tutorId: string,
